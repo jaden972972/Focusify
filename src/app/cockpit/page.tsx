@@ -21,7 +21,7 @@ const SUBJECT_PLAYLISTS: Playlist[] = [
   ]},
   { id: "subj-english", name: "English", tracks: [
     { id: "AaRhgWg2R4o", title: "English for Beginners – Basic Vocabulary" },
-    { id: "GC6mMcN3eug", title: "Learn English Grammar: Present Simple" },
+    { id: "dAz3UmAKvDU", title: "Learn English Grammar: Present Simple" },
     { id: "ffpjmXnEbKE", title: " How To Remember English Tenses – Full Lesson" },
   ]},
   { id: "subj-maths", name: "Maths", tracks: [
@@ -37,12 +37,12 @@ const SUBJECT_PLAYLISTS: Playlist[] = [
   { id: "subj-spanish", name: "Spanish", tracks: [
     { id: "aUl9JlBoKpc", title: "El Lazarillo de Tormes – Resumen" },
     { id: "kkUAwRWTqrI", title: "Oraciones subordinadas – Gramática" },
-    { id: "UUzvQRNheQ", title: "Historia de la lengua castellana – Lengua Castellana" },
+    { id: "PbFiv140R_4", title: "La Celestina – Resumen explicativo" },
   ]},
   { id: "subj-biology", name: "Biology & Geology", tracks: [
     { id: "QnQe0xW_JY4", title: "Evolution & Natural Selection – CrashCourse" },
     { id: "8IlzKri08kk", title: "Introduction to Cells – Biology" },
-    { id: "W_Zj_v09g_g", title: "What does Geology study? – Geology" },
+    { id: "pHgEhgSV14I", title: "Geology  – Geology" },
   ]},
   { id: "subj-physics", name: "Physics & Chemistry", tracks: [
     { id: "kKKM8Y-u7ds", title: "Newton's Laws of Motion – Physics" },
@@ -64,6 +64,8 @@ export default function Home() {
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+  const [showResetPlaylists, setShowResetPlaylists] = useState(false);
 
   const [videoId, setVideoId] = useState("ZbQh1ZPG5pc");
   const [input, setInput] = useState("");
@@ -445,6 +447,20 @@ export default function Home() {
               Home
             </Link>
           </div>
+          <div className="flex items-center gap-2 pt-2 border-t border-white/[0.04]">
+            <button onClick={() => setShowResetPlaylists(true)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/5 border border-white/[0.05] hover:border-yellow-400/20 transition-all">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6M23 20v-6h-6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /></svg>
+              Reiniciar listas
+            </button>
+            {session?.user && (
+              <button onClick={() => setShowDeleteAccount(true)}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-red-400 hover:bg-red-400/5 border border-white/[0.05] hover:border-red-400/20 transition-all">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" /></svg>
+                Eliminar cuenta
+              </button>
+            )}
+          </div>
         </div>
       </aside>
 
@@ -660,6 +676,59 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ── RESET PLAYLISTS MODAL ── */}
+      {showResetPlaylists && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
+          <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
+            <h2 className="text-base font-black mb-2">¿Reiniciar listas?</h2>
+            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+              Se borrarán todos tus videos guardados y se restaurarán las listas predeterminadas. Esta acción no se puede deshacer.
+            </p>
+            <div className="flex gap-2">
+              <button onClick={() => setShowResetPlaylists(false)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
+                Cancelar
+              </button>
+              <button onClick={() => {
+                localStorage.removeItem("focusify_playlists_v1");
+                setPlaylists(DEFAULT_PLAYLISTS);
+                setActivePlaylistId(DEFAULT_PLAYLISTS[0].id);
+                setCurrentTrackIdx(-1);
+                setShowResetPlaylists(false);
+              }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-black bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 transition-all">
+                Reiniciar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── DELETE ACCOUNT MODAL ── */}
+      {showDeleteAccount && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
+          <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
+            <h2 className="text-base font-black mb-2 text-red-400">¿Eliminar cuenta?</h2>
+            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+              Se cerrará tu sesión y se borrarán todos tus datos locales (listas y videos). Para eliminar tu cuenta de Google visita myaccount.google.com.
+            </p>
+            <div className="flex gap-2">
+              <button onClick={() => setShowDeleteAccount(false)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
+                Cancelar
+              </button>
+              <button onClick={() => {
+                localStorage.removeItem("focusify_playlists_v1");
+                signOut({ callbackUrl: "/" });
+              }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-black bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all">
+                Eliminar y salir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── ABOUT MODAL ── */}
       {showAbout && (
