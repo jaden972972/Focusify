@@ -54,10 +54,8 @@ const SUBJECT_PLAYLISTS: Playlist[] = [
     { id: "kqtD5dpn9C8", title: "Introduction to Python – Python Basics" },
     { id: "OAx_6-wdslM", title: "What is Artificial Intelligence?" },
   ]},
-  { id: "subj-concentracion", name: "Concentración Profunda", tracks: [
-    { id: "jfKfPfyJRdk", title: "Lofi Hip Hop Radio – Beats to Relax/Study" },
-    { id: "DWcJFNfaw9c", title: "Study Music Alpha Waves – Deep Focus" },
-    { id: "77ZozI0rw7w", title: "Deep Focus – 4 Hours Study Music" },
+  { id: "subj-concentracion", name: "Study Mode", tracks: [
+    { id: "PqxC0YT2BeU", title: "ALPHA WAVES – 6 Hours Study Music" },
   ]},
 ];
 const DEFAULT_PLAYLISTS: Playlist[] = [...SUBJECT_PLAYLISTS];
