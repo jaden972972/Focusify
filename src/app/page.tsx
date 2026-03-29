@@ -166,14 +166,36 @@ export default function Home() {
       {/* ── MAIN AREA ── */}
       <div className="flex-1 overflow-y-auto flex flex-col min-w-0">
 
-        {/* Mobile top bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05] md:hidden shrink-0">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.08] transition-colors">
+        {/* ── TOPBAR ── */}
+        <header className="shrink-0 flex items-center justify-between px-6 md:px-10 py-4 border-b border-white/[0.05]">
+          {/* Mobile hamburger */}
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.08] transition-colors md:hidden">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
           </button>
-          <span className="font-bold text-sm tracking-tight">Focusify</span>
-          <div className="w-9" />
-        </div>
+
+          {/* Brand — always visible */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500" style={{ background: accent }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+              </svg>
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-xl font-black tracking-tight">Focusify</span>
+              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md transition-colors duration-500 hidden sm:inline"
+                style={{ background: `${accent}22`, color: accent }}>
+                {MODES[mode].label}
+              </span>
+            </div>
+          </div>
+
+          {/* Right side — session pill */}
+          <div className="flex items-center gap-2 text-[11px] text-gray-500">
+            <div className="w-1.5 h-1.5 rounded-full transition-colors duration-300" style={{ background: isActive ? accent : "#333" }} />
+            <span className="hidden sm:inline">{isActive ? "In session" : "Ready"}</span>
+            <span className="font-bold text-white ml-1">{sessions} <span className="font-normal text-gray-600">sessions</span></span>
+          </div>
+        </header>
 
         {/* Content grid */}
         <div className="flex-1 flex flex-col lg:flex-row gap-6 p-5 md:p-8 lg:p-10">
