@@ -193,14 +193,6 @@ export default function Landing() {
           >
             Start Focusing — free
           </button>
-          <a
-            href="https://github.com/jaden972972/Focusify"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-4 rounded-2xl font-bold text-sm text-gray-400 hover:text-white border border-white/10 hover:border-white/20 transition-all duration-200 active:scale-95"
-          >
-            View on GitHub
-          </a>
         </div>
 
         {/* Stats */}

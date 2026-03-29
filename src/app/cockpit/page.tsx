@@ -13,7 +13,19 @@ type Mode = keyof typeof MODES;
 type Track = { id: string; title: string };
 type Playlist = { id: string; name: string; tracks: Track[] };
 
-const DEFAULT_PLAYLIST: Playlist = { id: "default", name: "My Library", tracks: [] };
+const SUBJECT_PLAYLISTS: Playlist[] = [
+  { id: "subj-english", name: "English", tracks: [] },
+  { id: "subj-maths", name: "Maths", tracks: [] },
+  { id: "subj-geo-history", name: "Geography & History", tracks: [] },
+  { id: "subj-spanish", name: "Spanish", tracks: [] },
+  { id: "subj-biology", name: "Biology & Geology", tracks: [] },
+  { id: "subj-physics", name: "Physics & Chemistry", tracks: [] },
+  { id: "subj-tech", name: "Technology & Digitalization", tracks: [] },
+];
+const DEFAULT_PLAYLISTS: Playlist[] = [
+  { id: "default", name: "My Library", tracks: [] },
+  ...SUBJECT_PLAYLISTS,
+];
 
 export default function Home() {
   const { data: session } = useSession();
@@ -26,7 +38,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   // ── Playlist state ──
-  const [playlists, setPlaylists] = useState<Playlist[]>([DEFAULT_PLAYLIST]);
+  const [playlists, setPlaylists] = useState<Playlist[]>(DEFAULT_PLAYLISTS);
   const [activePlaylistId, setActivePlaylistId] = useState<string>("default");
   const [currentTrackIdx, setCurrentTrackIdx] = useState(-1);
   const [expandedId, setExpandedId] = useState<string | null>("default");
@@ -180,7 +192,12 @@ export default function Home() {
 
   useEffect(() => {
     const saved = localStorage.getItem("focusify_playlists_v1");
-    if (saved) setPlaylists(JSON.parse(saved));
+    if (saved) {
+      const parsed: Playlist[] = JSON.parse(saved);
+      const existingIds = new Set(parsed.map((p: Playlist) => p.id));
+      const missing = DEFAULT_PLAYLISTS.filter(p => !existingIds.has(p.id));
+      setPlaylists(missing.length > 0 ? [...parsed, ...missing] : parsed);
+    }
   }, []);
 
   useEffect(() => {
@@ -211,7 +228,7 @@ export default function Home() {
       )}
 
       {/* ── SIDEBAR ── */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-72 flex flex-col border-r border-white/[0.06] bg-[#0c0c0e] p-6 gap-5
+      <aside className={`fixed inset-y-0 left-0 z-50 w-[22rem] flex flex-col border-r border-white/[0.06] bg-[#0c0c0e] p-6 gap-5
         transition-transform duration-300 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         md:relative md:translate-x-0 md:flex shrink-0`}>
@@ -299,13 +316,13 @@ export default function Home() {
               return (
                 <div key={pl.id}>
                   {/* Playlist header row */}
-                  <div className="flex items-center gap-1.5 group cursor-pointer px-2 py-2 rounded-xl hover:bg-white/[0.03] transition-colors"
+                  <div className="flex items-center gap-2 group cursor-pointer px-3 py-2.5 rounded-xl hover:bg-white/[0.04] transition-colors"
                     onClick={() => setExpandedId(isExpanded ? null : pl.id)}>
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                       style={{ color: isActive ? accent : "#555", transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
                       <path d="M9 18l6-6-6-6"/>
                     </svg>
-                    <span className="flex-1 text-[11px] font-semibold truncate" style={{ color: isActive ? "white" : "#888" }}>
+                    <span className="flex-1 text-xs font-semibold truncate" style={{ color: isActive ? "white" : "#999" }}>
                       {pl.name}
                     </span>
                     <span className="text-[9px] text-gray-600">{pl.tracks.length}</span>
@@ -326,10 +343,10 @@ export default function Home() {
                         pl.tracks.map((t, i) => {
                           const isPlaying = isActive && i === currentTrackIdx;
                           return (
-                            <div key={t.id} className="group/track flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-white/[0.03] transition-colors"
+                            <div key={t.id} className="group/track flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/[0.04] transition-colors"
                               style={isPlaying ? { background: `${accent}10` } : {}}>
                               <button onClick={() => playFromPlaylist(pl.id, i)}
-                                className="flex-1 text-left text-[10px] truncate font-medium transition-colors"
+                                className="flex-1 text-left text-[11px] truncate font-medium transition-colors"
                                 style={{ color: isPlaying ? "white" : "#777" }}>
                                 {isPlaying ? (
                                   <span className="inline-flex items-end gap-[2px] mr-1">
@@ -498,7 +515,7 @@ export default function Home() {
             <div className="bg-[#0d0d0f] border border-white/[0.07] rounded-3xl p-5">
               <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3">Search Music</p>
               <div className="flex gap-2">
-                <input type="text" placeholder="lofi, rain, ambient..."
+                <input type="text" placeholder="Busca videos..."
                   className="flex-1 bg-black/40 border border-white/[0.07] rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-white/20 transition-colors"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -542,18 +559,24 @@ export default function Home() {
                           <p className="flex-1 text-[10px] text-gray-400 leading-relaxed line-clamp-2">{title}</p>
                           {/* Save to playlist button + dropdown */}
                           <div className="relative shrink-0">
-                            <button onClick={() => setSaveMenuFor(saveMenuFor === vid ? null : vid)}
-                              title="Save to playlist"
-                              className="mt-0.5 text-gray-600 hover:text-white transition-colors">
+                            <button
+                              onClick={() => setSaveMenuFor(saveMenuFor === vid ? null : vid)}
+                              title="Guardar en lista"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all border mt-0.5"
+                              style={saveMenuFor === vid
+                                ? { background: `${accent}22`, color: accent, borderColor: `${accent}50` }
+                                : { color: "#888", background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.1)" }}
+                            >
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                 <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" /><path d="M17 21v-8H7v8M7 3v5h8" />
                               </svg>
+                              Save
                             </button>
                             {saveMenuFor === vid && (
-                              <div className="absolute right-0 bottom-full mb-1 z-50 bg-[#111] border border-white/[0.1] rounded-xl shadow-2xl py-1 w-40">
+                              <div className="absolute right-0 bottom-full mb-1 z-50 bg-[#111] border border-white/[0.1] rounded-xl shadow-2xl py-1 w-52 max-h-56 overflow-y-auto">
                                 {playlists.map(pl => (
                                   <button key={pl.id} onClick={() => addToPlaylist(pl.id, { id: vid, title })}
-                                    className="w-full text-left px-3 py-2 text-[10px] text-gray-300 hover:bg-white/[0.06] hover:text-white transition-colors truncate">
+                                    className="w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:bg-white/[0.06] hover:text-white transition-colors truncate">
                                     {pl.name}
                                   </button>
                                 ))}
