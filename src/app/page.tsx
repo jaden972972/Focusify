@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const MODES = {
   FOCUS: { label: "Focus", minutes: 25, color: "#8b5cf6" },
@@ -18,8 +18,20 @@ export default function Home() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState<{ id: string; title: string }[]>([]);
+  const [loopLibrary, setLoopLibrary] = useState(false);
+  const [currentFavIndex, setCurrentFavIndex] = useState(-1);
 
   const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+
+  // Refs for stable access inside YT event callbacks
+  const playerRef = useRef<any>(null);
+  const loopRef = useRef(false);
+  const favsRef = useRef<{ id: string; title: string }[]>([]);
+  const favIdxRef = useRef(-1);
+
+  useEffect(() => { loopRef.current = loopLibrary; }, [loopLibrary]);
+  useEffect(() => { favsRef.current = favorites; }, [favorites]);
+  useEffect(() => { favIdxRef.current = currentFavIndex; }, [currentFavIndex]);
 
   const [mode, setMode] = useState<Mode>("FOCUS");
   const [seconds, setSeconds] = useState(MODES.FOCUS.minutes * 60);
@@ -31,6 +43,58 @@ export default function Home() {
   const radius = 80;
   const circumference = 2 * Math.PI * radius;
   const accent = MODES[mode].color;
+
+  // ── YT IFrame API ──
+  const initPlayer = () => {
+    if (!document.getElementById("yt-player")) return;
+    playerRef.current = new (window as any).YT.Player("yt-player", {
+      videoId,
+      playerVars: { autoplay: 1, modestbranding: 1, rel: 0 },
+      events: {
+        onStateChange: (e: any) => {
+          // 0 = ended
+          if (e.data === 0 && loopRef.current) {
+            const favs = favsRef.current;
+            if (favs.length === 0) return;
+            const nextIdx = (favIdxRef.current + 1) % favs.length;
+            favIdxRef.current = nextIdx;
+            setCurrentFavIndex(nextIdx);
+            setVideoId(favs[nextIdx].id);
+          }
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    if ((window as any).YT?.Player) {
+      initPlayer();
+    } else {
+      if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+      }
+      (window as any).onYouTubeIframeAPIReady = initPlayer;
+    }
+    return () => { playerRef.current?.destroy?.(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Load new video in existing player instead of remounting iframe
+  useEffect(() => {
+    if (playerRef.current?.loadVideoById) {
+      playerRef.current.loadVideoById(videoId);
+    }
+  }, [videoId]);
+
+  const playRandom = () => {
+    if (favorites.length === 0) return;
+    const idx = Math.floor(Math.random() * favorites.length);
+    setCurrentFavIndex(idx);
+    setVideoId(favorites[idx].id);
+    setSidebarOpen(false);
+  };
 
   const changeMode = (newMode: Mode) => {
     setMode(newMode);
@@ -100,12 +164,16 @@ export default function Home() {
         {/* Brand */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: accent }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+            {/* Logo: eye + lightning bolt */}
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500" style={{ background: accent }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span className="font-bold text-sm tracking-tight">Focusify</span>
+            <div className="flex flex-col">
+              <span className="font-black text-sm tracking-tight leading-none">Focusify</span>
+              <span className="text-[9px] text-gray-500 tracking-wide leading-none mt-0.5">No ads &nbsp;·&nbsp; Study In Peace.</span>
+            </div>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg text-gray-600 hover:text-white hover:bg-white/[0.05] transition-colors md:hidden">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
@@ -129,28 +197,75 @@ export default function Home() {
 
         {/* Library */}
         <div className="flex-1 overflow-hidden flex flex-col min-h-0">
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3 shrink-0">Library</p>
+          {/* Library header with controls */}
+          <div className="flex items-center justify-between mb-3 shrink-0">
+            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Library</p>
+            <div className="flex items-center gap-1">
+              {/* Shuffle button */}
+              <button onClick={playRandom} title="Play random"
+                className="p-1.5 rounded-lg transition-colors text-gray-600 hover:text-white hover:bg-white/[0.05] disabled:opacity-30"
+                disabled={favorites.length === 0}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                </svg>
+              </button>
+              {/* Loop toggle */}
+              <button onClick={() => setLoopLibrary((v) => !v)} title="Loop library"
+                className="p-1.5 rounded-lg transition-all"
+                style={loopLibrary
+                  ? { background: `${accent}22`, color: accent }
+                  : { color: "#444" }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/>
+                  <path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
           <div className="flex-1 overflow-y-auto space-y-1 pr-0.5">
             {favorites.length === 0 ? (
               <p className="text-[11px] text-gray-700 italic text-center py-8">No saved tracks yet.</p>
             ) : (
-              favorites.map((f, i) => (
-                <div key={i} className="group flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.05] transition-all">
-                  <div className="w-6 h-6 rounded-lg bg-white/[0.06] flex items-center justify-center shrink-0">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" className="text-gray-400">
-                      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-                    </svg>
+              favorites.map((f, i) => {
+                const isPlaying = i === currentFavIndex;
+                return (
+                  <div key={i} className="group flex items-center gap-2 p-2.5 rounded-xl border transition-all"
+                    style={isPlaying
+                      ? { background: `${accent}12`, borderColor: `${accent}40` }
+                      : { borderColor: "transparent" }}
+                  >
+                    <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                      style={{ background: isPlaying ? `${accent}30` : "rgba(255,255,255,0.06)" }}>
+                      {isPlaying ? (
+                        /* animated equalizer bars */
+                        <div className="flex items-end gap-[2px] h-3">
+                          {[1,2,3].map((b) => (
+                            <div key={b} className="w-[2px] rounded-full animate-bounce"
+                              style={{ height: `${6 + b * 2}px`, background: accent, animationDelay: `${b * 0.15}s` }} />
+                          ))}
+                        </div>
+                      ) : (
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" className="text-gray-400">
+                          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                        </svg>
+                      )}
+                    </div>
+                    <button onClick={() => { setVideoId(f.id); setCurrentFavIndex(i); setSidebarOpen(false); }}
+                      className="flex-1 text-left text-[11px] truncate transition-colors font-medium"
+                      style={{ color: isPlaying ? "white" : undefined }}>
+                      {f.title}
+                    </button>
+                    <button onClick={() => {
+                        setFavorites(favorites.filter((fav) => fav.id !== f.id));
+                        if (isPlaying) setCurrentFavIndex(-1);
+                      }}
+                      className="text-gray-700 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all shrink-0">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                    </button>
                   </div>
-                  <button onClick={() => { setVideoId(f.id); setSidebarOpen(false); }}
-                    className="flex-1 text-left text-[11px] text-gray-400 group-hover:text-white truncate transition-colors font-medium">
-                    {f.title}
-                  </button>
-                  <button onClick={() => setFavorites(favorites.filter((fav) => fav.id !== f.id))}
-                    className="text-gray-700 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all shrink-0">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12" /></svg>
-                  </button>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
@@ -175,17 +290,20 @@ export default function Home() {
 
           {/* Brand — always visible */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500" style={{ background: accent }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500" style={{ background: accent }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round"/>
               </svg>
             </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-black tracking-tight">Focusify</span>
-              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md transition-colors duration-500 hidden sm:inline"
-                style={{ background: `${accent}22`, color: accent }}>
-                {MODES[mode].label}
-              </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-black tracking-tight leading-none">Focusify</span>
+                <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-md transition-colors duration-500 hidden sm:inline leading-none"
+                  style={{ background: `${accent}22`, color: accent }}>
+                  {MODES[mode].label}
+                </span>
+              </div>
+              <span className="text-[9px] text-gray-600 tracking-wide leading-none mt-0.5 hidden sm:block">No ads &nbsp;·&nbsp; Study In Peace.</span>
             </div>
           </div>
 
@@ -311,10 +429,30 @@ export default function Home() {
             )}
 
             {/* Player */}
-            <div className="flex-1 bg-[#0d0d0f] border border-white/[0.07] rounded-3xl overflow-hidden min-h-56">
-              <iframe key={videoId} className="w-full h-full min-h-56"
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`}
-                allow="autoplay; encrypted-media" allowFullScreen />
+            <div className="flex-1 bg-[#0d0d0f] border border-white/[0.07] rounded-3xl overflow-hidden min-h-56 relative">
+              <div id="yt-player" className="w-full h-full min-h-56" />
+              {/* Loop & shuffle quick controls overlay */}
+              {favorites.length > 0 && (
+                <div className="absolute bottom-3 right-3 flex gap-1.5">
+                  <button onClick={playRandom} title="Play random from library"
+                    className="p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/[0.08] text-gray-400 hover:text-white transition-colors">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                    </svg>
+                  </button>
+                  <button onClick={() => setLoopLibrary((v) => !v)} title="Loop library"
+                    className="p-2 rounded-xl backdrop-blur-sm border transition-all"
+                    style={loopLibrary
+                      ? { background: `${accent}30`, borderColor: `${accent}60`, color: accent }
+                      : { background: "rgba(0,0,0,0.6)", borderColor: "rgba(255,255,255,0.08)", color: "#666" }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/>
+                      <path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+                    </svg>
+                  </button>
+                </div>
+              )}
             </div>
 
           </div>
