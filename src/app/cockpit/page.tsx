@@ -501,13 +501,13 @@ export default function Home() {
             <button onClick={() => setShowResetPlaylists(true)}
               className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/5 border border-white/[0.05] hover:border-yellow-400/20 transition-all">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6M23 20v-6h-6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /></svg>
-              Reiniciar listas
+              Reset playlists
             </button>
             {session?.user && (
               <button onClick={() => setShowDeleteAccount(true)}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-red-400 hover:bg-red-400/5 border border-white/[0.05] hover:border-red-400/20 transition-all">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" /></svg>
-                Eliminar cuenta
+                Delete account
               </button>
             )}
           </div>
@@ -621,7 +621,7 @@ export default function Home() {
             <div className="bg-[#0d0d0f] border border-white/[0.07] rounded-3xl p-5">
               <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3">Search Music</p>
               <div className="flex gap-2">
-                <input type="text" placeholder="Busca videos..."
+                <input type="text" placeholder="Search videos..."
                   className="flex-1 bg-black/40 border border-white/[0.07] rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-white/20 transition-colors"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -629,7 +629,7 @@ export default function Home() {
                 <button onClick={() => searchYoutube(input)}
                   className="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95"
                   style={{ background: accent }}>
-                  {loading ? "···" : "Go"}
+                  {loading ? "···" : "Search"}
                 </button>
               </div>
             </div>
@@ -731,14 +731,14 @@ export default function Home() {
       {showResetPlaylists && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
           <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
-            <h2 className="text-base font-black mb-2">¿Reiniciar listas?</h2>
+            <h2 className="text-base font-black mb-2">Reset playlists?</h2>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Se borrarán todos tus videos guardados y se restaurarán las listas predeterminadas. Esta acción no se puede deshacer.
+              All your saved videos will be deleted and the default playlists will be restored. This action cannot be undone.
             </p>
             <div className="flex gap-2">
               <button onClick={() => setShowResetPlaylists(false)}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
-                Cancelar
+                Cancel
               </button>
               <button onClick={() => {
                 localStorage.removeItem("focusify_playlists_v1");
@@ -748,7 +748,7 @@ export default function Home() {
                 setShowResetPlaylists(false);
               }}
                 className="flex-1 py-2.5 rounded-xl text-sm font-black bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 transition-all">
-                Reiniciar
+                Reset
               </button>
             </div>
           </div>
@@ -759,21 +759,21 @@ export default function Home() {
       {showDeleteAccount && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
           <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
-            <h2 className="text-base font-black mb-2 text-red-400">¿Eliminar cuenta?</h2>
+            <h2 className="text-base font-black mb-2 text-red-400">Delete account?</h2>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Se cerrará tu sesión y se borrarán todos tus datos locales (listas y videos). Para eliminar tu cuenta de Google visita myaccount.google.com.
+              You will be signed out and all your local data (playlists and videos) will be deleted. To delete your Google account visit myaccount.google.com.
             </p>
             <div className="flex gap-2">
               <button onClick={() => setShowDeleteAccount(false)}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
-                Cancelar
+                Cancel
               </button>
               <button onClick={() => {
                 localStorage.removeItem("focusify_playlists_v1");
                 signOut({ callbackUrl: "/" });
               }}
                 className="flex-1 py-2.5 rounded-xl text-sm font-black bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all">
-                Eliminar y salir
+                Delete & sign out
               </button>
             </div>
           </div>
