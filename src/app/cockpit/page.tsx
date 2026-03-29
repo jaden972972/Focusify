@@ -16,43 +16,48 @@ type Playlist = { id: string; name: string; tracks: Track[] };
 const SUBJECT_PLAYLISTS: Playlist[] = [
   { id: "subj-music", name: "Music", tracks: [
     { id: "jfKfPfyJRdk", title: "Lofi Hip Hop Radio – Beats to Relax/Study" },
-    { id: "5qap5aO4i9A", title: "Lofi Hip Hop Radio – Chilled Beats" },
+    { id: "Jya0o8Ignas", title: "Study  – Songs" },
     { id: "4xDzrJKXOOY", title: "Synthwave Radio – Beats to Study/Work" },
   ]},
   { id: "subj-english", name: "English", tracks: [
-    { id: "vx6LMHpBbSk", title: "English for Beginners – Basic Vocabulary" },
-    { id: "ixS4hHe3_Oc", title: "Learn English Grammar: Present Simple" },
-    { id: "PpNOiHKhFxQ", title: "English Tenses Explained – Full Lesson" },
+    { id: "AaRhgWg2R4o", title: "English for Beginners – Basic Vocabulary" },
+    { id: "GC6mMcN3eug", title: "Learn English Grammar: Present Simple" },
+    { id: "ffpjmXnEbKE", title: " How To Remember English Tenses – Full Lesson" },
   ]},
   { id: "subj-maths", name: "Maths", tracks: [
-    { id: "tMSGMSiSd_8", title: "Introduction to Division – Math Antics" },
-    { id: "bQ5mMOVQKMU", title: "Long Division – Step by Step" },
-    { id: "AS2hkFBNp54", title: "Fractions and Decimals – Basic Maths" },
+    { id: "lGfsp2CWjok", title: "Introduction to Functions – Maths" },
+    { id: "LGqBQrUYua4", title: "Long Division – Maths Antics" },
+    { id: "MpdcRU-zFmw", title: "2nd grade equations – Maths " },
   ]},
   { id: "subj-geo-history", name: "Geography & History", tracks: [
-    { id: "Xs_obJ-KIqM", title: "The Agricultural Revolution – CrashCourse" },
-    { id: "xuPYhZO0G0s", title: "Geography Basics: Maps & Coordinates" },
-    { id: "4OHbY3iVCDE", title: "Ancient Civilizations – World History" },
+    { id: "QRTdVWDY_Qk", title: "What is Geography? – Crooked Contours" },
+    { id: "flvYNFLp0iQ", title: "Economic Geography – Basics" },
+    { id: "w6go2zSGCXo", title: "Ancient Technologies – World History" },
   ]},
   { id: "subj-spanish", name: "Spanish", tracks: [
-    { id: "YQnN7N3GLRY", title: "El Lazarillo de Tormes – Resumen" },
-    { id: "TmVY-M_lKi0", title: "Oraciones subordinadas – Gramática" },
-    { id: "M-xrAHD77hI", title: "Comentario de texto – Lengua Castellana" },
+    { id: "aUl9JlBoKpc", title: "El Lazarillo de Tormes – Resumen" },
+    { id: "kkUAwRWTqrI", title: "Oraciones subordinadas – Gramática" },
+    { id: "UUzvQRNheQ", title: "Historia de la lengua castellana – Lengua Castellana" },
   ]},
   { id: "subj-biology", name: "Biology & Geology", tracks: [
     { id: "QnQe0xW_JY4", title: "Evolution & Natural Selection – CrashCourse" },
-    { id: "O_y7vPnMaCI", title: "La Célula y sus Partes – Biología" },
-    { id: "pHMi5dXZeVc", title: "Rocas y Minerales – Geología básica" },
+    { id: "8IlzKri08kk", title: "Introduction to Cells – Biology" },
+    { id: "W_Zj_v09g_g", title: "What does Geology study? – Geology" },
   ]},
   { id: "subj-physics", name: "Physics & Chemistry", tracks: [
     { id: "kKKM8Y-u7ds", title: "Newton's Laws of Motion – Physics" },
-    { id: "Ba1TaKp4NLs", title: "The Periodic Table Explained" },
-    { id: "FSyAehMdpyY", title: "Introduction to Chemistry – CrashCourse" },
+    { id: "wXRHz5ZEIK0", title: "The Periodic Table Explained" },
+    { id: "5iTOphGnCtg", title: "Introduction to Chemistry – Science" },
   ]},
   { id: "subj-tech", name: "Technology & Digitalization", tracks: [
     { id: "AkYDsiRVqno", title: "How Does the Internet Work?" },
-    { id: "N_ZgowCzFnE", title: "Introduction to Programming – CS Basics" },
+    { id: "kqtD5dpn9C8", title: "Introduction to Python – Python Basics" },
     { id: "OAx_6-wdslM", title: "What is Artificial Intelligence?" },
+  ]},
+  { id: "subj-concentracion", name: "Concentración Profunda", tracks: [
+    { id: "jfKfPfyJRdk", title: "Lofi Hip Hop Radio – Beats to Relax/Study" },
+    { id: "DWcJFNfaw9c", title: "Study Music Alpha Waves – Deep Focus" },
+    { id: "77ZozI0rw7w", title: "Deep Focus – 4 Hours Study Music" },
   ]},
 ];
 const DEFAULT_PLAYLISTS: Playlist[] = [...SUBJECT_PLAYLISTS];
