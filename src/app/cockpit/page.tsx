@@ -225,6 +225,25 @@ export default function Home() {
       setIsActive(false);
       if (mode === "FOCUS") setSessions((s) => s + 1);
       document.title = "Studdia";
+      // Play a soft two-tone chime via Web Audio API
+      try {
+        const ctx = new AudioContext();
+        const play = (freq: number, start: number, dur: number) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+          gain.gain.setValueAtTime(0, ctx.currentTime + start);
+          gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+          osc.start(ctx.currentTime + start);
+          osc.stop(ctx.currentTime + start + dur);
+        };
+        play(880, 0, 0.6);
+        play(660, 0.35, 0.8);
+      } catch (_) {}
     }
     return () => clearInterval(interval);
   }, [isActive, seconds, mode]);
