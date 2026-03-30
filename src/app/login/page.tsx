@@ -24,7 +24,7 @@ export default function LoginPage() {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-black tracking-tight mb-1">Focusify</h1>
+        <h1 className="text-3xl font-black tracking-tight mb-1">Studdia</h1>
         <p className="text-gray-500 text-sm mb-8">Sign in to save your playlists across devices.</p>
 
         {/* Google button */}

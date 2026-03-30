@@ -219,11 +219,11 @@ export default function Home() {
     let interval: ReturnType<typeof setInterval>;
     if (isActive && seconds > 0) {
       interval = setInterval(() => setSeconds((s) => s - 1), 1000);
-      document.title = `(${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, "0")}) Focusify`;
+      document.title = `(${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, "0")}) Studdia`;
     } else if (seconds === 0) {
       setIsActive(false);
       if (mode === "FOCUS") setSessions((s) => s + 1);
-      document.title = "Focusify";
+      document.title = "Studdia";
     }
     return () => clearInterval(interval);
   }, [isActive, seconds, mode]);
@@ -260,7 +260,7 @@ export default function Home() {
       }
 
       if (!loaded) {
-        const local = localStorage.getItem("focusify_playlists_v1");
+        const local = localStorage.getItem("studdia_playlists_v1");
         if (local) {
           const parsed: Playlist[] = JSON.parse(local);
           const existingIds = new Set(parsed.map((p: Playlist) => p.id));
@@ -282,7 +282,7 @@ export default function Home() {
   // Save playlists: always localStorage + Supabase (debounced) when logged in
   useEffect(() => {
     if (!initializedRef.current) return;
-    localStorage.setItem("focusify_playlists_v1", JSON.stringify(playlists));
+    localStorage.setItem("studdia_playlists_v1", JSON.stringify(playlists));
     if (sessionRef.current?.user) {
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
       saveTimeoutRef.current = setTimeout(() => {
@@ -323,9 +323,10 @@ export default function Home() {
 
       {/* ── SIDEBAR ── */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-[22rem] flex flex-col border-r border-white/[0.06] bg-[#0c0c0e] p-6 gap-5
-        transition-transform duration-300 ease-in-out
+        transition-[transform,opacity] duration-500 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        md:relative md:translate-x-0 md:flex shrink-0`}>
+        md:relative md:translate-x-0 md:flex shrink-0
+        ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}`}>
 
         {/* Brand */}
         <div className="flex items-center justify-between">
@@ -337,7 +338,7 @@ export default function Home() {
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="font-black text-sm tracking-tight leading-none">Focusify</span>
+              <span className="font-black text-sm tracking-tight leading-none">Studdia</span>
               <span className="text-[9px] text-gray-500 tracking-wide leading-none mt-0.5">No ads &nbsp;·&nbsp; Study In Peace.</span>
             </div>
           </div>
@@ -421,8 +422,8 @@ export default function Home() {
                     </span>
                     <span className="text-[9px] text-gray-600">{pl.tracks.length}</span>
                     <button onClick={e => { e.stopPropagation(); deletePlaylist(pl.id); }}
-                        className="opacity-0 group-hover:opacity-100 text-gray-700 hover:text-red-400 transition-all shrink-0">
-                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        className="opacity-100 md:opacity-0 md:group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-all shrink-0 p-1 -mr-1 touch-manipulation">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
                       </button>
                   </div>
 
@@ -451,8 +452,8 @@ export default function Home() {
                                 {t.title}
                               </button>
                               <button onClick={() => removeFromPlaylist(pl.id, t.id)}
-                                className="opacity-0 group-hover/track:opacity-100 text-gray-700 hover:text-red-400 transition-all shrink-0">
-                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                                className="opacity-100 md:opacity-0 md:group-hover/track:opacity-100 text-gray-600 hover:text-red-400 transition-all shrink-0 p-1 -mr-1 touch-manipulation">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
                               </button>
                             </div>
                           );
@@ -533,7 +534,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="text-lg font-black tracking-tight leading-none">Focusify</span>
+                <span className="text-lg font-black tracking-tight leading-none">Studdia</span>
                 <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-md transition-colors duration-500 hidden sm:inline leading-none"
                   style={{ background: `${accent}22`, color: accent }}>
                   {MODES[mode].label}
@@ -622,14 +623,15 @@ export default function Home() {
               <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3">Search Music</p>
               <div className="flex gap-2">
                 <input type="text" placeholder="Search videos..."
-                  className="flex-1 bg-black/40 border border-white/[0.07] rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-gray-600 outline-none focus:border-white/20 transition-colors"
+                  className="flex-1 bg-black/40 border border-white/[0.07] rounded-xl px-3 py-2 text-xs md:text-sm text-white placeholder:text-gray-600 outline-none focus:border-white/20 transition-colors"
+                  style={{ fontSize: '16px' }}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && searchYoutube(input)} />
                 <button onClick={() => searchYoutube(input)}
-                  className="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95"
+                  className="px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 shrink-0"
                   style={{ background: accent }}>
-                  {loading ? "···" : "Search"}
+                  {loading ? "···" : "Go"}
                 </button>
               </div>
             </div>
@@ -679,7 +681,7 @@ export default function Home() {
                               Save
                             </button>
                             {saveMenuFor === vid && (
-                              <div className="absolute right-0 bottom-full mb-1 z-50 bg-[#111] border border-white/[0.1] rounded-xl shadow-2xl py-1 w-52 max-h-56 overflow-y-auto">
+                              <div className="absolute right-0 bottom-full mb-1 z-50 bg-[#111] border border-white/[0.1] rounded-xl shadow-2xl py-1 w-52 max-h-48 overflow-y-auto">
                                 {playlists.map(pl => (
                                   <button key={pl.id} onClick={() => addToPlaylist(pl.id, { id: vid, title })}
                                     className="w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:bg-white/[0.06] hover:text-white transition-colors truncate">
@@ -741,7 +743,7 @@ export default function Home() {
                 Cancel
               </button>
               <button onClick={() => {
-                localStorage.removeItem("focusify_playlists_v1");
+                localStorage.removeItem("studdia_playlists_v1");
                 setPlaylists(DEFAULT_PLAYLISTS);
                 setActivePlaylistId(DEFAULT_PLAYLISTS[0].id);
                 setCurrentTrackIdx(-1);
@@ -769,7 +771,7 @@ export default function Home() {
                 Cancel
               </button>
               <button onClick={() => {
-                localStorage.removeItem("focusify_playlists_v1");
+                localStorage.removeItem("studdia_playlists_v1");
                 signOut({ callbackUrl: "/" });
               }}
                 className="flex-1 py-2.5 rounded-xl text-sm font-black bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all">
@@ -795,7 +797,7 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-base font-black tracking-tight">Focusify</h2>
+                <h2 className="text-base font-black tracking-tight">Studdia</h2>
                 <p className="text-[10px] text-gray-500">Stable v9.0</p>
               </div>
             </div>

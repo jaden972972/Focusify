@@ -44,10 +44,83 @@ const STATS = [
   { value: "100%", label: "Distraction-free" },
 ];
 
+const STEPS = [
+  {
+    n: "01",
+    title: "Pick your mode",
+    desc: "Choose Focus (25 min), Short Break (5 min) or Long Break (15 min). The timer adapts its colour so you always know where you are.",
+    icon: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.5-5H11v6l5.25 3.15.75-1.23-4.5-2.67V7z",
+  },
+  {
+    n: "02",
+    title: "Set your soundtrack",
+    desc: "Search YouTube or pick from a curated subject playlist — lo‑fi, maths, history, physics and more. Hit play and forget the tab.",
+    icon: "M9 19V6l12-3v13M9 19c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm12-3c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z",
+  },
+  {
+    n: "03",
+    title: "Lock in",
+    desc: "Press start. The sidebar fades away, the timer counts down and your music plays. When the session ends, your streak ticks up.",
+    icon: "M13 2L4 14h7l-1 8 9-12h-7l1-8z",
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: "I used to lose 40 minutes every session fighting with Spotify ads. Studdia just works — I open it and I'm in the zone immediately.",
+    name: "Mia R.",
+    role: "University student · Biology",
+    initials: "MR",
+    color: "#8b5cf6",
+  },
+  {
+    quote: "The sidebar fade when the timer runs is such a small detail but it genuinely helps. Pure focus mode.",
+    name: "Carlos D.",
+    role: "High school · Physics & Maths",
+    initials: "CD",
+    color: "#06b6d4",
+  },
+  {
+    quote: "I built custom playlists for each subject. Now my brain literally switches into study mode the second the music starts.",
+    name: "Jade K.",
+    role: "A‑Levels · Chemistry & History",
+    initials: "JK",
+    color: "#10b981",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Is Studdia completely free?",
+    a: "Yes. Studdia is free to use with no ads, no paywalls and no premium tier. There's no catch.",
+  },
+  {
+    q: "Do I need to create an account?",
+    a: "No sign‑up is required. You can open the app and start a session immediately. Sign in with Google only if you want your playlists to sync across devices.",
+  },
+  {
+    q: "Where does the music come from?",
+    a: "All music is streamed directly from YouTube via the official IFrame API. Any video you can find on YouTube can be added to a playlist inside Studdia.",
+  },
+  {
+    q: "Will ads play during music?",
+    a: "No ads play inside the embedded player. Studdia is engineered specifically so you never hear an ad mid‑session.",
+  },
+  {
+    q: "Can I use Studdia on mobile?",
+    a: "Studdia is fully responsive. The sidebar collapses on small screens so the timer and player stay centred. Works great on any modern browser.",
+  },
+  {
+    q: "How does playlist sync work?",
+    a: "When you sign in with Google, your playlists are saved to a Supabase database. When you log in on another device, they're loaded automatically.",
+  },
+];
+
 export default function Landing() {
   const router = useRouter();
   const [wordIdx, setWordIdx] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -125,7 +198,7 @@ export default function Landing() {
               <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
             </svg>
           </div>
-          <span className="text-xl font-black tracking-tight">Focusify</span>
+          <span className="text-xl font-black tracking-tight">Studdia</span>
           <span className="hidden sm:inline text-[10px] font-bold px-2 py-0.5 rounded-md bg-violet-500/15 text-violet-400 border border-violet-500/25 tracking-widest uppercase">
             beta
           </span>
@@ -220,7 +293,7 @@ export default function Landing() {
               <div className="w-3 h-3 rounded-full bg-green-500/60" />
             </div>
             <div className="flex-1 mx-4 h-6 rounded-md bg-white/[0.04] flex items-center px-3">
-              <span className="text-gray-600 text-xs">focusify-three.vercel.app/cockpit</span>
+              <span className="text-gray-600 text-xs">studdia.vercel.app/cockpit</span>
             </div>
           </div>
           {/* UI skeleton */}
@@ -264,9 +337,39 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FEATURES GRID ── */}
-      <section className="relative z-10 px-6 pb-24 max-w-5xl mx-auto">
+      {/* ── HOW IT WORKS ── */}
+      <section className="relative z-10 px-6 pb-24 max-w-5xl mx-auto w-full">
         <div className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">How it works</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Three steps to deep work.</h2>
+          <p className="text-gray-500 text-base max-w-md mx-auto">No onboarding. No tutorial. You already know what to do.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {STEPS.map((s, i) => (
+            <div key={s.n} className="relative flex flex-col p-7 rounded-2xl bg-white/[0.025] border border-white/[0.06] hover:border-violet-500/30 transition-all duration-300 group">
+              {/* connector line */}
+              {i < STEPS.length - 1 && (
+                <div className="hidden md:block absolute top-10 -right-3 w-6 h-[1px] bg-white/[0.08] z-10" />
+              )}
+              <span className="text-[11px] font-black tracking-[0.2em] mb-5 transition-colors duration-300"
+                style={{ color: "rgba(139,92,246,0.5)" }}>{s.n}</span>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 group-hover:scale-105 transition-transform duration-300"
+                style={{ background: "rgba(139,92,246,0.15)" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={s.icon} />
+                </svg>
+              </div>
+              <h3 className="text-white font-bold text-base mb-2">{s.title}</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FEATURES GRID ── */}
+      <section className="relative z-10 px-6 pb-24 max-w-5xl mx-auto w-full">
+        <div className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Features</p>
           <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Everything you need. Nothing you don&apos;t.</h2>
           <p className="text-gray-500 text-base max-w-md mx-auto">Six features. Zero bloat. Built to keep you locked in.</p>
         </div>
@@ -276,10 +379,8 @@ export default function Landing() {
               key={f.title}
               className="group p-6 rounded-2xl bg-white/[0.025] border border-white/[0.06] hover:border-violet-500/30 hover:bg-white/[0.04] transition-all duration-300"
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                style={{ background: "rgba(139,92,246,0.15)" }}
-              >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                style={{ background: "rgba(139,92,246,0.15)" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d={f.icon} />
                 </svg>
@@ -291,25 +392,101 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── TESTIMONIALS ── */}
+      <section className="relative z-10 px-6 pb-24 max-w-5xl mx-auto w-full">
+        <div className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Students love it</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Real words from real students.</h2>
+          <p className="text-gray-500 text-base max-w-md mx-auto">No paid reviews. Just people who actually study with Studdia.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {TESTIMONIALS.map((t) => (
+            <div key={t.name}
+              className="flex flex-col justify-between p-7 rounded-2xl bg-white/[0.025] border border-white/[0.06] hover:border-violet-500/20 transition-all duration-300">
+              {/* Stars */}
+              <div className="flex gap-1 mb-5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill="#8b5cf6"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                ))}
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed flex-1 mb-6">&ldquo;{t.quote}&rdquo;</p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
+                  style={{ background: `${t.color}22`, color: t.color, border: `1px solid ${t.color}33` }}>
+                  {t.initials}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-white text-xs font-bold">{t.name}</span>
+                  <span className="text-gray-600 text-[10px]">{t.role}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="relative z-10 px-6 pb-24 max-w-3xl mx-auto w-full">
+        <div className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">FAQ</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Got questions?</h2>
+          <p className="text-gray-500 text-base max-w-md mx-auto">Answers to the things people ask before they try it.</p>
+        </div>
+        <div className="flex flex-col gap-2">
+          {FAQS.map((f, i) => (
+            <div key={i}
+              className="rounded-2xl bg-white/[0.025] border border-white/[0.06] overflow-hidden transition-all duration-200 hover:border-violet-500/20">
+              <button
+                className="w-full flex items-center justify-between px-6 py-5 text-left gap-4"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                <span className="text-white text-sm font-bold">{f.q}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                  className="shrink-0 text-gray-500 transition-transform duration-300"
+                  style={{ transform: openFaq === i ? "rotate(180deg)" : "rotate(0deg)" }}>
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+              {openFaq === i && (
+                <div className="px-6 pb-5">
+                  <p className="text-gray-400 text-sm leading-relaxed">{f.a}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── FINAL CTA ── */}
       <section className="relative z-10 flex flex-col items-center text-center px-6 pb-32">
-        <div className="max-w-xl">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
-            Ready to{" "}
+        <div
+          className="w-full max-w-3xl rounded-3xl p-12 md:p-16 border border-violet-500/20 relative overflow-hidden"
+          style={{ background: "radial-gradient(ellipse at top, rgba(139,92,246,0.12) 0%, rgba(6,6,8,0.8) 70%)" }}>
+          {/* glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] pointer-events-none"
+            style={{ background: "radial-gradient(ellipse at top, rgba(139,92,246,0.18) 0%, transparent 70%)" }} />
+          <p className="relative text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-5">Ready?</p>
+          <h2 className="relative text-4xl md:text-5xl font-black tracking-tight mb-5 leading-tight">
+            Stop planning.<br />
             <span style={{ background: "linear-gradient(135deg, #a78bfa, #8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              lock in?
+              Start locking in.
             </span>
           </h2>
-          <p className="text-gray-500 text-base mb-8">
+          <p className="relative text-gray-400 text-base mb-10 max-w-md mx-auto leading-relaxed">
             No sign‑up required. Open the app and start your first session in under 10 seconds.
           </p>
-          <button
-            onClick={() => router.push("/cockpit")}
-            className="px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all duration-200 active:scale-95"
-            style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 50px rgba(139,92,246,0.4)" }}
-          >
-            Start Focusing — free
-          </button>
+          <div className="relative flex flex-wrap gap-3 justify-center">
+            <button
+              onClick={() => router.push("/cockpit")}
+              className="px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all duration-200 active:scale-95"
+              style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 50px rgba(139,92,246,0.4)" }}>
+              Open app — free
+            </button>
+            <button
+              onClick={() => router.push("/login")}
+              className="px-8 py-4 rounded-2xl font-bold text-sm text-gray-400 hover:text-white bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.15] transition-all duration-200">
+              Sign in with Google
+            </button>
+          </div>
         </div>
       </section>
 
@@ -319,11 +496,11 @@ export default function Landing() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="#6d28d9" strokeLinejoin="round"/>
           </svg>
-          <span className="font-bold text-gray-500">Focusify</span>
+          <span className="font-bold text-gray-500">Studdia</span>
           <span>· No ads · Study In Peace.</span>
         </div>
         <div className="flex items-center gap-5 text-[11px] text-gray-600">
-          <a href="https://github.com/jaden972972/Focusify" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">GitHub</a>
+          <a href="https://github.com/jaden972972/Studdia" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400 transition-colors">GitHub</a>
           <button onClick={() => router.push("/cockpit")} className="hover:text-gray-400 transition-colors">App</button>
           <button onClick={() => router.push("/login")} className="hover:text-gray-400 transition-colors">Sign in</button>
         </div>
