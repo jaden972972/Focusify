@@ -1,10 +1,12 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const errorMsg = searchParams.get("error");
 
   useEffect(() => {
     const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(
@@ -38,6 +40,12 @@ export default function LoginPage() {
 
         <h1 className="text-3xl font-black tracking-tight mb-1">Studdia</h1>
         <p className="text-gray-500 text-sm mb-8">Sign in to save your playlists across devices.</p>
+
+        {errorMsg && (
+          <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[11px] text-left break-all">
+            <span className="font-bold">Error: </span>{decodeURIComponent(errorMsg)}
+          </div>
+        )}
 
         {/* Google button */}
         <button
