@@ -723,11 +723,11 @@ export default function Home() {
                   )}
                 </button>
               </div>
-              <div className="relative min-h-56" style={{ display: showPlayer ? "block" : "none" }}>
-                <div id="yt-player" className="w-full h-full min-h-56" />
+              <div className="relative w-full" style={{ display: showPlayer ? "block" : "none", aspectRatio: "16/9" }}>
+                <div id="yt-player" className="absolute inset-0 w-full h-full" />
                 {/* Loop & shuffle quick controls overlay */}
                 {activeTracks.length > 0 && (
-                  <div className="absolute bottom-3 right-3 flex gap-1.5">
+                  <div className="absolute bottom-3 right-3 flex gap-1.5 z-10">
                     <button onClick={playRandom} title="Play random from active playlist"
                       className="p-2 rounded-xl bg-black/60 backdrop-blur-sm border border-white/[0.08] text-gray-400 hover:text-white transition-colors">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
