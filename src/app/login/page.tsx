@@ -8,6 +8,22 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const errorMsg = searchParams.get("error");
 
+  async function handleGoogleLogin() {
+    try {
+      const { error } = await supabaseBrowser.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        window.location.href = `/login?error=${encodeURIComponent(error.message)}`;
+      }
+    } catch (e: any) {
+      window.location.href = `/login?error=${encodeURIComponent(e?.message ?? "Unknown error")}`;
+    }
+  }
+
   useEffect(() => {
     const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange(
       (event, session) => {
@@ -49,14 +65,7 @@ function LoginContent() {
 
         {/* Google button */}
         <button
-          onClick={async () => {
-            await supabaseBrowser.auth.signInWithOAuth({
-              provider: "google",
-              options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
-              },
-            });
-          }}
+          onClick={handleGoogleLogin}
           className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-2xl bg-white text-black font-bold text-sm hover:bg-gray-100 transition-colors active:scale-95"
         >
           {/* Google G logo */}
