@@ -27,7 +27,7 @@ function LoginContent() {
   useEffect(() => {
     const supabase = getSupabaseBrowser();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (_event, session) => {
         if (session) {
           router.replace("/cockpit");
         }
