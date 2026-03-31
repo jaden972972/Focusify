@@ -2,6 +2,7 @@
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 function LoginContent() {
   const router = useRouter();
@@ -27,7 +28,7 @@ function LoginContent() {
   useEffect(() => {
     const supabase = getSupabaseBrowser();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (_event: AuthChangeEvent, session: Session | null) => {
         if (session) {
           router.replace("/cockpit");
         }
