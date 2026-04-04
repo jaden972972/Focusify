@@ -424,14 +424,18 @@ export default function Home() {
               <div className="flex items-center gap-1.5">
                 <span className={`font-black text-sm leading-none ${isPro ? "tracking-wider" : "tracking-tight"}`}>Studdia</span>
                 {isPro && (
-                  <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md leading-none pro-badge-anim"
-                    style={{ border: "1px solid rgba(139,92,246,0.45)", background: "rgba(139,92,246,0.12)" }}>
-                    PRO
+                  <span className="inline-flex items-center relative select-none leading-none">
+                    <span
+                      aria-hidden="true"
+                      style={{ fontSize: 0, opacity: 0, position: "absolute", userSelect: "all", pointerEvents: "none" }}
+                    >
+                      {legendBadge ? "[LEYENDA]" : "[PRO]"}
+                    </span>
+                    <LogoStuddia size={26} glowIntensity="strong" className="pro-neon" />
                   </span>
                 )}
                 {legendBadge && (
-                  <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md leading-none"
-                    style={{ border: "1px solid rgba(251,191,36,0.5)", background: "rgba(251,191,36,0.12)", color: "#fbbf24" }}>
+                  <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md leading-none legend-badge">
                     LEYENDA
                   </span>
                 )}
@@ -527,7 +531,7 @@ export default function Home() {
                       style={{ color: isActive ? accent : "#555", transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
                       <path d="M9 18l6-6-6-6"/>
                     </svg>
-                    <span className="flex-1 text-sm font-bold truncate" style={{ color: "white" }}>
+                <span className="flex-1 text-sm font-bold truncate" style={{ color: "var(--text-primary)" }}>
                       {pl.name}
                     </span>
                     <span className="text-[9px] text-gray-600">{pl.tracks.length}</span>
@@ -989,7 +993,7 @@ export default function Home() {
       {showLeague && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl"
           onClick={() => setShowLeague(false)}>
-          <div className="bg-[#0d0d0f] border border-white/[0.08] rounded-3xl w-full max-w-sm shadow-2xl"
+          <div className="league-modal-card border border-white/[0.08] rounded-3xl w-full max-w-sm shadow-2xl"
             onClick={e => e.stopPropagation()}>
             {/* Header row */}
             <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/[0.06]">
@@ -1044,7 +1048,7 @@ export default function Home() {
                     {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
                   </span>
                   <span className="flex-1 text-sm font-semibold truncate"
-                    style={{ color: entry.isMe ? LEAGUE_META[leagueTierView].color : "var(--text-main)" }}>
+                    style={{ color: entry.isMe ? LEAGUE_META[leagueTierView].color : "var(--text-primary)" }}>
                     {entry.display_name}{entry.isMe && " (tú)"}
                   </span>
                   {entry.streak > 0 && (

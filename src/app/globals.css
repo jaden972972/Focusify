@@ -5,17 +5,21 @@
   --background: #ffffff;
   --foreground: #171717;
   /* Dark by default — overridden below for light */
-  --text-main:      #ffffff;
+  --text-primary:   #ffffff;
+  --text-main:      #ffffff;  /* alias */
   --text-secondary: #cccccc;
   --bg-main:        #000000;
   --bg-surface:     #0d0d0f;
+  --bg-sidebar:     #0d0d0d;
 }
 
 [data-theme="light"] {
+  --text-primary:   #1a1a1a;
   --text-main:      #1a1a1a;
-  --text-secondary: #555555;
+  --text-secondary: #666666;
   --bg-main:        #ffffff;
   --bg-surface:     #f7f7f5;
+  --bg-sidebar:     #f5f5f5;
 }
 
 @theme inline {
@@ -76,10 +80,34 @@ body {
   animation: skeleton-shimmer 1.4s ease infinite;
 }
 
-@keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+/* ── PRO neon badge — always magenta, ignores theme ──────────────── */
+.pro-neon {
+  filter:
+    drop-shadow(0 0 4px #FF00FF)
+    drop-shadow(0 0 10px rgba(255,0,255,0.6));
 }
+
+/* ── LEYENDA badge ────────────────────────────────────────── */
+.legend-badge {
+  border: 1px solid rgba(251,191,36,0.5);
+  background: rgba(251,191,36,0.12);
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251,191,36,0.7);
+}
+[data-theme="light"] .legend-badge {
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1), 0 0 0 1px rgba(251,191,36,0.4);
+  background: rgba(251,191,36,0.15);
+  color: #b45309;
+  text-shadow: none;
+}
+
+/* ── League modal inner card ───────────────────────────────── */
+.league-modal-card {
+  background: var(--bg-surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 
 /* ── Cockpit light mode overrides ──────────────────────────── */
 [data-theme="light"] .bg-\[\#080808\]          { background-color: #f0efe9 !important; }
