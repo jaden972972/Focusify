@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PomodoroSection from "@/app/components/PomodoroSection";
+import Navbar from "@/app/components/Navbar";
 
 const WORDS = ["Ventaja.", "Injusta.", "Tuya."];
 
@@ -252,7 +253,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#060608] text-white font-sans overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#060608] text-white font-sans overflow-x-hidden pt-14">
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
 
       {/* ── SCARCITY BANNER ── */}
@@ -271,38 +272,7 @@ export default function Landing() {
       />
 
       {/* ── NAVBAR ── */}
-      <nav className="relative z-20 flex items-center justify-between px-6 md:px-16 py-5 border-b border-white/[0.05]">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-            style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)" }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <span className="text-xl font-black tracking-tight">Studdia</span>
-          <span className="hidden sm:inline text-[10px] font-bold px-2 py-0.5 rounded-md bg-violet-500/15 text-violet-400 border border-violet-500/25 tracking-widest uppercase">
-            beta
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push("/login")}
-            className="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2"
-          >
-            Entrar
-          </button>
-          <a href="#pricing" className="text-sm text-gray-400 hover:text-white transition-colors px-2 py-2 hidden sm:block">Precio</a>
-          <button
-            onClick={() => router.push("/cockpit")}
-            className="text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-95"
-            style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 24px rgba(139,92,246,0.3)" }}
-          >
-            Abrir App →
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* ── HERO ── */}
       <section className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-20 max-w-4xl mx-auto">

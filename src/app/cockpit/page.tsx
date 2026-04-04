@@ -6,6 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useSubscription } from "@/hooks/useSubscription";
 import ProModal from "@/app/components/ProModal";
 import ProBadge from "@/app/components/ProBadge";
+import LogoStuddia from "@/app/components/LogoStuddia";
 import { LEAGUE_META } from "@/lib/subscription";
 import { useTimer, TIMER_MODES, type TimerMode, useTheme } from "@/app/providers";
 
@@ -417,12 +418,8 @@ export default function Home() {
         {/* Brand */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            {/* Logo: eye + lightning bolt */}
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500" style={{ background: accent }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round"/>
-              </svg>
-            </div>
+            {/* Logo */}
+            <LogoStuddia size={42} glowIntensity="soft" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className={`font-black text-sm leading-none ${isPro ? "tracking-wider" : "tracking-tight"}`}>Studdia</span>
@@ -661,11 +658,7 @@ export default function Home() {
 
           {/* Brand — always visible */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-500" style={{ background: accent }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round"/>
-              </svg>
-            </div>
+            <LogoStuddia size={42} glowIntensity="soft" />
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="text-lg font-black tracking-tight leading-none">Studdia</span>
