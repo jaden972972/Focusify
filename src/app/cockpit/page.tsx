@@ -40,6 +40,7 @@ export default function Home() {
   const { isPro, limits } = useSubscription();
   const { muted, toggleMuted } = useTimer();
   const { toggleTheme, theme } = useTheme();
+  const isDark = theme === "dark";
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showTasksPopup, setShowTasksPopup] = useState(false);
@@ -402,10 +403,10 @@ export default function Home() {
   }
 
   return (
-    <main className="h-screen w-screen text-white overflow-hidden flex font-sans"
-      style={isPro
-        ? { background: "radial-gradient(ellipse at 30% 50%, #0e0a1a 0%, #080808 60%, #000 100%)" }
-        : { background: "#080808" }}>
+    <main className="h-screen w-screen overflow-hidden flex font-sans"
+      style={isPro && isDark
+        ? { background: "radial-gradient(ellipse at 30% 50%, #0e0a1a 0%, #080808 60%, #000 100%)", color: "white" }
+        : { background: isDark ? "#080808" : "#f0efe9", color: isDark ? "white" : "#111" }}>
 
       {/* ── TASKS SIDE DRAWER ── */}
       {showTasksPopup && (
