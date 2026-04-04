@@ -239,11 +239,11 @@ export default function TasksPage() {
       style={{ background: pageBg, color: textPrimary }}>
       <ProModal open={showProModal} onClose={() => setShowProModal(false)} />
 
-      {/* ── PRIORITY POPUP OVERLAY ── */}
+      {/* ── PRIORITY SIDE DRAWER ── */}
       {showPriorityPopup && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowPriorityPopup(false)}>
-          <div className="w-full max-w-sm rounded-3xl border p-5 flex flex-col gap-3 max-h-[70vh]"
-            style={{ background: isDark ? "#111113" : "#fff", borderColor: cardBorder, boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}
+        <div className="fixed inset-0 z-50 flex justify-end" onClick={() => setShowPriorityPopup(false)}>
+          <div className="h-full w-full max-w-[300px] border-l p-5 flex flex-col gap-3 overflow-y-auto"
+            style={{ background: isDark ? "#0d0d0f" : "#fff", borderColor: cardBorder, boxShadow: "-20px 0 60px rgba(0,0,0,0.5)", animation: "slideInRight 0.2s ease" }}
             onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-1">
               <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: textMuted }}>Tareas por hacer</span>

@@ -421,7 +421,14 @@ export default function Home() {
             </div>
             <div className="overflow-y-auto flex flex-col gap-1.5 [scrollbar-width:none]">
               {popupTasks.length === 0 && (
-                <p className="text-center py-6 text-xs text-gray-700">Sin tareas guardadas.</p>
+                <div className="flex flex-col items-center gap-3 py-8 text-center">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="1.5"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                  <p className="text-xs text-gray-600">Aún no tienes tareas.<br/>Créalas en la página de Tareas.</p>
+                  <Link href="/tasks" onClick={() => setShowTasksPopup(false)}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[11px] font-bold text-violet-400 border border-violet-400/30 hover:bg-violet-400/10 transition-all">
+                    Ir a Tareas →
+                  </Link>
+                </div>
               )}
               {popupTasks.map((t) => {
                 const colors: Record<string,string> = { high:"#f87171", medium:"#fbbf24", low:"#6b7280" };
