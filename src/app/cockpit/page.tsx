@@ -407,11 +407,11 @@ export default function Home() {
         ? { background: "radial-gradient(ellipse at 30% 50%, #0e0a1a 0%, #080808 60%, #000 100%)" }
         : { background: "#080808" }}>
 
-      {/* ── TASKS POPUP ── */}
+      {/* ── TASKS SIDE DRAWER ── */}
       {showTasksPopup && (
-        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4" onClick={() => setShowTasksPopup(false)}>
-          <div className="w-full max-w-xs rounded-3xl border bg-[#111113] p-5 flex flex-col gap-3 max-h-[65vh]"
-            style={{ borderColor: "rgba(255,255,255,0.08)", boxShadow: "0 20px 60px rgba(0,0,0,0.7)" }}
+        <div className="fixed inset-0 z-[60] flex justify-end" onClick={() => setShowTasksPopup(false)}>
+          <div className="h-full w-full max-w-[300px] border-l bg-[#0d0d0f] p-5 flex flex-col gap-3 overflow-y-auto"
+            style={{ borderColor: "rgba(255,255,255,0.08)", boxShadow: "-20px 0 60px rgba(0,0,0,0.7)", animation: "slideInRight 0.2s ease" }}
             onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-black uppercase tracking-widest text-gray-500">Tareas pendientes</span>
@@ -490,7 +490,7 @@ export default function Home() {
                   </span>
                 )}
               </div>
-              <span className="text-[9px] text-gray-500 tracking-wide leading-none mt-0.5">No ads &nbsp;·&nbsp; Study In Peace.</span>
+
             </div>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg text-gray-600 hover:text-white hover:bg-white/[0.05] transition-colors md:hidden">
@@ -663,18 +663,18 @@ export default function Home() {
             <button onClick={() => { setShowAbout(true); setSidebarOpen(false); }}
               className="flex items-center gap-2 text-[11px] text-gray-600 hover:text-gray-300 transition-colors">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
-              About v9
+              Acerca v9
             </button>
             <Link href="/" className="flex items-center gap-1.5 text-[11px] text-gray-600 hover:text-gray-300 transition-colors">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              Home
+              Inicio
             </Link>
           </div>
           <div className="flex items-center gap-2 pt-2 border-t border-white/[0.04] md:hidden">
             <Link href="/tasks" onClick={() => setSidebarOpen(false)}
               className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-400 hover:text-violet-400 hover:bg-violet-400/5 border border-white/[0.05] hover:border-violet-400/20 transition-all">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-              Tasks
+              Tareas
             </Link>
             <button onClick={() => { setSidebarOpen(false); setTimeout(() => { setShowLeague(true); fetchLeague(leaguePeriod); }, 10); }}
               className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-400 hover:text-amber-400 hover:bg-amber-400/5 border border-white/[0.05] hover:border-amber-400/20 transition-all">
@@ -682,20 +682,20 @@ export default function Home() {
                 <path d="M6 9H4a2 2 0 00-2 2v1a2 2 0 002 2h2M18 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/>
                 <path d="M6 9v8a6 6 0 0012 0V9M6 9H18M8 9V5h8v4"/>
               </svg>
-              League
+              Liga
             </button>
           </div>
           <div className="flex items-center gap-2 pt-2 border-t border-white/[0.04]">
             <button onClick={() => setShowResetPlaylists(true)}
               className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/5 border border-white/[0.05] hover:border-yellow-400/20 transition-all">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6M23 20v-6h-6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /></svg>
-              Reset playlists
+              Reiniciar listas
             </button>
             {session?.user && (
               <button onClick={() => setShowDeleteAccount(true)}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-red-400 hover:bg-red-400/5 border border-white/[0.05] hover:border-red-400/20 transition-all">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" /></svg>
-                Delete account
+                Eliminar cuenta
               </button>
             )}
           </div>
@@ -730,7 +730,7 @@ export default function Home() {
                   {TIMER_MODES[mode].label}
                 </span>
               </div>
-              <span className="text-[9px] text-gray-600 tracking-wide leading-none mt-0.5 hidden sm:block">No ads &nbsp;·&nbsp; Study In Peace.</span>
+
             </div>
           </div>
 
@@ -738,7 +738,7 @@ export default function Home() {
           <div className="flex items-center gap-2 text-[11px] text-gray-500">
             <div className="hidden sm:flex items-center gap-2 mr-1">
               <div className="w-1.5 h-1.5 rounded-full transition-colors duration-300" style={{ background: isActive ? accent : "#333" }} />
-              <span>{isActive ? "In session" : "Ready"}</span>
+              <span>{isActive ? "En sesión" : "Listo"}</span>
               <span className="font-bold text-white ml-1">{sessions} <span className="font-normal text-gray-600">sesiones</span></span>
             </div>
             <button
@@ -748,7 +748,7 @@ export default function Home() {
                 <path d="M6 9H4a2 2 0 00-2 2v1a2 2 0 002 2h2M18 9h2a2 2 0 012 2v1a2 2 0 01-2 2h-2"/>
                 <path d="M6 9v8a6 6 0 0012 0V9M6 9H18M8 9V5h8v4"/>
               </svg>
-              League
+              Liga
             </button>
             <button
               onClick={openTasksPopup}
@@ -766,11 +766,7 @@ export default function Home() {
                 : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
               }
             </button>
-            <Link href="/tasks"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-gray-400 hover:text-violet-400 hover:bg-violet-400/5 border border-white/[0.07] hover:border-violet-400/20 transition-all">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-              Tasks
-            </Link>
+
             {!isPro && (
               <button
                 onClick={() => setShowProModal(true)}
