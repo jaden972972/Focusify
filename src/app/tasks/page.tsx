@@ -124,15 +124,25 @@ export default function TasksPage() {
     if (session?.user) {
       // Server Action path: limit enforced server-side
       setAddingTask(true);
-      const result = await addTaskAction(newTask);
-      setAddingTask(false);
-      if ("error" in result) {
-        if (result.error === "LIMIT_REACHED") setShowProModal(true);
-        return;
+      try {
+        const result = await addTaskAction(newTask);
+        if ("error" in result) {
+          if (result.error === "LIMIT_REACHED") {
+            setShowProModal(true);
+            return;
+          }
+          // UNAUTHORIZED / DB_ERROR → fall back to local add
+          setTasks((prev) => [newTask, ...prev]);
+        } else {
+          setTasks(result.tasks);
+          saveTasks(result.tasks);
+        }
+      } catch {
+        // Network/server error → fall back to local add
+        setTasks((prev) => [newTask, ...prev]);
+      } finally {
+        setAddingTask(false);
       }
-      // Server returned updated array → sync local state + localStorage
-      setTasks(result.tasks);
-      saveTasks(result.tasks);
     } else {
       // Guest path: enforce limit locally
       const localLimit = PLAN_LIMITS.free.maxTasks!;

@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   const { data, error } = await supabase
-    .from("user_playlists")
+    .from("cockpit_playlists")
     .select("playlists")
     .eq("user_email", session.user.email)
     .single();
@@ -42,7 +42,7 @@ export async function PUT(req: Request) {
   }
 
   const { error } = await supabase
-    .from("user_playlists")
+    .from("cockpit_playlists")
     .upsert(
       {
         user_email: session.user.email,
