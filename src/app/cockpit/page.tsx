@@ -500,10 +500,10 @@ export default function Home() {
 
         {/* Session counter */}
         <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-2">Today</p>
+          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-2">Hoy</p>
           <div className="flex items-end gap-1.5 mb-3">
             <span className="text-3xl font-black tabular-nums">{sessions}</span>
-            <span className="text-gray-500 text-sm mb-1">sessions</span>
+            <span className="text-gray-500 text-sm mb-1">sesiones</span>
           </div>
           <div className="flex gap-1">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -516,7 +516,7 @@ export default function Home() {
         {/* Playlists */}
         <div className="flex-1 overflow-hidden flex flex-col min-h-0">
           <div className="flex items-center justify-between mb-3 shrink-0">
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Playlists</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Listas</p>
             <div className="flex items-center gap-1">
               <button onClick={playRandom} title="Play random from active playlist"
                 className="p-1.5 rounded-lg transition-colors text-gray-600 hover:text-white hover:bg-white/[0.05] disabled:opacity-30"
@@ -535,7 +535,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => playlistLimitReached ? setShowProModal(true) : setShowNewPlaylist(v => !v)}
-                title={playlistLimitReached ? "Upgrade to Pro for unlimited playlists" : "New playlist"}
+                title={playlistLimitReached ? "Mejora a Pro para listas ilimitadas" : "Nueva lista"}
                 className="p-1.5 rounded-lg transition-colors hover:bg-white/[0.05]"
                 style={playlistLimitReached ? { color: "#8b5cf6" } : { color: "#4b5563" }}>
                 {playlistLimitReached ? (
@@ -555,7 +555,7 @@ export default function Home() {
           {/* New playlist input */}
           {showNewPlaylist && (
             <div className="flex gap-1.5 mb-3 shrink-0">
-              <input autoFocus type="text" placeholder="Playlist name..."
+              <input autoFocus type="text" placeholder="Nombre de la lista..."
                 className="flex-1 bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-[11px] text-white placeholder:text-gray-600 outline-none focus:border-white/20 transition-colors"
                 value={newPlaylistName} onChange={e => setNewPlaylistName(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && createPlaylist()} />
@@ -592,7 +592,7 @@ export default function Home() {
                   {isExpanded && (
                     <div className="ml-4 space-y-0.5">
                       {pl.tracks.length === 0 ? (
-                        <p className="text-[10px] text-gray-700 italic px-2 py-2">Empty. Add tracks from search.</p>
+                        <p className="text-[10px] text-gray-700 italic px-2 py-2">Vacío. Busca y añade canciones.</p>
                       ) : (
                         pl.tracks.map((t, i) => {
                           const isPlaying = isActive && i === currentTrackIdx;
@@ -739,7 +739,7 @@ export default function Home() {
             <div className="hidden sm:flex items-center gap-2 mr-1">
               <div className="w-1.5 h-1.5 rounded-full transition-colors duration-300" style={{ background: isActive ? accent : "#333" }} />
               <span>{isActive ? "In session" : "Ready"}</span>
-              <span className="font-bold text-white ml-1">{sessions} <span className="font-normal text-gray-600">sessions</span></span>
+              <span className="font-bold text-white ml-1">{sessions} <span className="font-normal text-gray-600">sesiones</span></span>
             </div>
             <button
               onClick={() => { setShowLeague(true); fetchLeague(leaguePeriod); }}
@@ -846,10 +846,10 @@ export default function Home() {
                   <div className="text-center flex-1">
                     <div>
                       <span className="text-sm font-black tabular-nums" style={{ color: accent }}>{effectiveFocusMin}</span>
-                      <span className="text-[10px] text-gray-500 ml-1">min focus</span>
+                      <span className="text-[10px] text-gray-500 ml-1">min enfoque</span>
                     </div>
                     {effectiveFocusMin < 25 && (
-                      <p className="text-[9px] mt-0.5 font-semibold" style={{ color: "#f59e0b" }}>won&apos;t count in league</p>
+                      <p className="text-[9px] mt-0.5 font-semibold" style={{ color: "#f59e0b" }}>no contará en la liga</p>
                     )}
                   </div>
                   <button onClick={() => adjustFocus(+5)} disabled={isActive || customFocusMin >= 120}
@@ -915,9 +915,9 @@ export default function Home() {
 
             {/* Search card */}
             <div className="bg-[#0d0d0f] border border-white/[0.07] rounded-3xl p-5">
-              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3">Search Music</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3">Buscar música</p>
               <div className="flex gap-2">
-                <input type="text" placeholder="Search videos..."
+                <input type="text" placeholder="Buscar videos..."
                   className="flex-1 bg-black/40 border border-white/[0.07] rounded-xl px-3 py-2 text-xs md:text-sm text-white placeholder:text-gray-600 outline-none focus:border-white/20 transition-colors"
                   style={{ fontSize: '16px' }}
                   value={input}
@@ -926,7 +926,7 @@ export default function Home() {
                 <button onClick={() => searchYoutube(input)}
                   className="px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 shrink-0"
                   style={{ background: accent }}>
-                  {loading ? "···" : "Go"}
+                  {loading ? "···" : "Ir"}
                 </button>
               </div>
             </div>
@@ -939,8 +939,8 @@ export default function Home() {
             {results.length > 0 && (
               <div className="bg-[#0d0d0f] border border-white/[0.07] rounded-3xl p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Results</p>
-                  <button onClick={() => setResults([])} className="text-[10px] text-gray-600 hover:text-white transition-colors">Clear</button>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Resultados</p>
+                  <button onClick={() => setResults([])} className="text-[10px] text-gray-600 hover:text-white transition-colors">Limpiar</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {results.map((item) => {
@@ -973,7 +973,7 @@ export default function Home() {
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                 <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" /><path d="M17 21v-8H7v8M7 3v5h8" />
                               </svg>
-                              Save
+                              Guardar
                             </button>
                             {saveMenuFor === vid && (
                               <div className="absolute right-0 bottom-full mb-1 z-50 bg-[#111] border border-white/[0.1] rounded-xl shadow-2xl py-1 w-52 max-h-48 overflow-y-auto">
@@ -1051,14 +1051,14 @@ export default function Home() {
       {showResetPlaylists && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
           <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
-            <h2 className="text-base font-black mb-2">Reset playlists?</h2>
+            <h2 className="text-base font-black mb-2">¿Reiniciar listas?</h2>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              All your saved videos will be deleted and the default playlists will be restored. This action cannot be undone.
+              Se eliminarán todos tus videos guardados y se restaurarán las listas por defecto. Esta acción no se puede deshacer.
             </p>
             <div className="flex gap-2">
               <button onClick={() => setShowResetPlaylists(false)}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
-                Cancel
+                Cancelar
               </button>
               <button onClick={() => {
                 localStorage.removeItem("studdia_playlists_v1");
@@ -1068,7 +1068,7 @@ export default function Home() {
                 setShowResetPlaylists(false);
               }}
                 className="flex-1 py-2.5 rounded-xl text-sm font-black bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 transition-all">
-                Reset
+                Reiniciar
               </button>
             </div>
           </div>
@@ -1079,21 +1079,21 @@ export default function Home() {
       {showDeleteAccount && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
           <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
-            <h2 className="text-base font-black mb-2 text-red-400">Delete account?</h2>
+            <h2 className="text-base font-black mb-2 text-red-400">¿Eliminar cuenta?</h2>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              You will be signed out and all your local data (playlists and videos) will be deleted. To delete your Google account visit myaccount.google.com.
+              Cerrarás sesión y se eliminarán todos tus datos locales (listas y videos). Para eliminar tu cuenta de Google, visita myaccount.google.com.
             </p>
             <div className="flex gap-2">
               <button onClick={() => setShowDeleteAccount(false)}
                 className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
-                Cancel
+                Cancelar
               </button>
               <button onClick={() => {
                 localStorage.removeItem("studdia_playlists_v1");
                 signOut({ callbackUrl: "/" });
               }}
                 className="flex-1 py-2.5 rounded-xl text-sm font-black bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all">
-                Delete & sign out
+                Eliminar y cerrar sesión
               </button>
             </div>
           </div>
@@ -1112,14 +1112,14 @@ export default function Home() {
             <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-white/[0.06]">
               <div className="flex items-center gap-2">
                 <span className="text-base">🏆</span>
-                <h2 className="font-black text-base">Weekly League</h2>
+                <h2 className="font-black text-base">Liga Semanal</h2>
               </div>
               <div className="flex gap-0.5 p-0.5 bg-black/40 rounded-full border border-white/[0.06]">
                 {(["week", "total"] as const).map(p => (
                   <button key={p} onClick={() => { setLeaguePeriod(p); fetchLeague(p); }}
                     className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition-all"
                     style={leaguePeriod === p ? { background: accent, color: "white" } : { color: "#555" }}>
-                    {p === "week" ? "This Week" : "All Time"}
+                    {p === "week" ? "Esta semana" : "Total"}
                   </button>
                 ))}
               </div>
@@ -1130,9 +1130,9 @@ export default function Home() {
             </div>
             <div className="px-4 py-3 space-y-1.5 max-h-80 overflow-y-auto">
               {leagueLoading ? (
-                <div className="text-center py-10 text-gray-600 text-sm">Loading...</div>
+                <div className="text-center py-10 text-gray-600 text-sm">Cargando...</div>
               ) : leagueData.length === 0 ? (
-                <div className="text-center py-10 text-gray-600 text-sm">No data yet.<br/>Complete sessions to appear here!</div>
+                <div className="text-center py-10 text-gray-600 text-sm">Sin datos aún.<br/>¡Completa sesiones para aparecer!</div>
               ) : leagueData.map((entry, i) => (
                 <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors"
                   style={entry.isMe
@@ -1144,16 +1144,16 @@ export default function Home() {
                   </span>
                   <span className="flex-1 text-sm font-semibold truncate"
                     style={{ color: entry.isMe ? accent : "white" }}>
-                    {entry.display_name}{entry.isMe && " (you)"}
+                    {entry.display_name}{entry.isMe && " (tú)"}
                   </span>
                   <span className="text-sm font-black tabular-nums" style={{ color: entry.isMe ? accent : "#ccc" }}>
                     {leaguePeriod === "week" ? entry.sessions_week : entry.sessions_total}
                   </span>
-                  <span className="text-[10px] text-gray-600 shrink-0">sess.</span>
+                  <span className="text-[10px] text-gray-600 shrink-0">ses.</span>
                 </div>
               ))}
             </div>
-            <p className="text-center text-[10px] text-gray-600 pb-4 pt-1">Resets every Monday · min. 25 min focus to count</p>
+            <p className="text-center text-[10px] text-gray-600 pb-4 pt-1">Se reinicia cada lunes · mín. 25 min de enfoque para contar</p>
           </div>
         </div>
       )}
@@ -1178,7 +1178,7 @@ export default function Home() {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              A minimalist cockpit for deep work. Pomodoro technique meets YouTube ambient music. Built with Next.js and YouTube Data API.
+              Un cockpit minimalista para trabajo profundo. Técnica Pomodoro con música ambiente de YouTube. Construido con Next.js y YouTube Data API.
             </p>
             <div className="mt-5 pt-5 border-t border-white/[0.06]">
               <p className="text-[11px] text-gray-600 italic">Discipline equals freedom.</p>

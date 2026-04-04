@@ -21,9 +21,9 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const TIMER_MODES = {
-  FOCUS: { label: "Focus", minutes: 25, color: "#8b5cf6" },
-  SHORT: { label: "Break", minutes: 5,  color: "#10b981" },
-  LONG:  { label: "Long Break", minutes: 15, color: "#3b82f6" },
+  FOCUS: { label: "Enfoque", minutes: 25, color: "#8b5cf6" },
+  SHORT: { label: "Descanso", minutes: 5,  color: "#10b981" },
+  LONG:  { label: "Descanso largo", minutes: 15, color: "#3b82f6" },
 } as const;
 
 export type TimerMode = keyof typeof TIMER_MODES;
