@@ -71,7 +71,17 @@ export default function Home() {
   const [showResetPlaylists, setShowResetPlaylists] = useState(false);
   const [showProModal, setShowProModal] = useState(false);
 
-  const [videoId, setVideoId] = useState("ZbQh1ZPG5pc");
+  const [videoId, setVideoId] = useState(() => {
+    if (typeof window === "undefined") return "ZbQh1ZPG5pc";
+    try {
+      const raw = localStorage.getItem("studdia_video_pos");
+      if (raw) {
+        const { id } = JSON.parse(raw) as { id: string; time: number };
+        if (id) return id;
+      }
+    } catch {}
+    return "ZbQh1ZPG5pc";
+  });
   const [input, setInput] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
