@@ -647,12 +647,25 @@ export default function Home() {
               </button>
             )}
             {session?.user?.image && (
-              <img
-                src={session.user.image}
-                alt={session.user.name ?? "User"}
-                title={session.user.name ?? ""}
-                className="w-7 h-7 rounded-full border border-white/10 shrink-0"
-              />
+              <div className="relative shrink-0">
+                <img
+                  src={session.user.image}
+                  alt={session.user.name ?? "User"}
+                  title={session.user.name ?? ""}
+                  className="w-7 h-7 rounded-full shrink-0 transition-all"
+                  style={isPro ? { border: "2px solid #8b5cf6", boxShadow: "0 0 10px rgba(139,92,246,0.5)" } : { border: "1px solid rgba(255,255,255,0.1)" }}
+                />
+                {isPro && (
+                  <div
+                    className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full flex items-center justify-center"
+                    style={{ background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", boxShadow: "0 0 6px rgba(139,92,246,0.8)" }}
+                    title="Pro member">
+                    <svg width="7" height="7" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </header>
