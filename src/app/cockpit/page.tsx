@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useSubscription } from "@/hooks/useSubscription";
 import ProModal from "@/app/components/ProModal";
-import { useTimer, TIMER_MODES, type TimerMode } from "@/app/providers";
+import { useTimer, TIMER_MODES, type TimerMode, useTheme } from "@/app/providers";
 
 type Track = { id: string; title: string };
 type Playlist = { id: string; name: string; tracks: Track[] };
@@ -38,12 +38,37 @@ const DEFAULT_PLAYLISTS: Playlist[] = [...SUBJECT_PLAYLISTS];
 export default function Home() {
   const { data: session, status } = useSession();
   const { isPro, limits } = useSubscription();
+  const { muted, toggleMuted } = useTimer();
+  const { toggleTheme, theme } = useTheme();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showTasksPopup, setShowTasksPopup] = useState(false);
+  const [popupTasks, setPopupTasks] = useState<{id:string;text:string;done:boolean;priority:"high"|"medium"|"low"}[]>([]);
   const [showAbout, setShowAbout] = useState(false);
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
   const [showResetPlaylists, setShowResetPlaylists] = useState(false);
   const [showProModal, setShowProModal] = useState(false);
+
+  const openTasksPopup = () => {
+    try {
+      const raw = localStorage.getItem("studdia_tasks_v1");
+      const all = raw ? JSON.parse(raw) : [];
+      const ordered = [
+        ...(["high","medium","low"] as const).flatMap(p => all.filter((t: any) => !t.done && t.priority === p)),
+        ...all.filter((t: any) => t.done),
+      ];
+      setPopupTasks(ordered);
+    } catch { setPopupTasks([]); }
+    setShowTasksPopup(true);
+  };
+  const togglePopupTask = (id: string) => {
+    setPopupTasks(prev => prev.map(t => t.id === id ? {...t, done: !t.done} : t));
+    try {
+      const raw = localStorage.getItem("studdia_tasks_v1");
+      const all = raw ? JSON.parse(raw) : [];
+      localStorage.setItem("studdia_tasks_v1", JSON.stringify(all.map((t: any) => t.id === id ? {...t, done: !t.done} : t)));
+    } catch {}
+  };
 
   const [videoId, setVideoId] = useState(() => {
     if (typeof window === "undefined") return "ZbQh1ZPG5pc";
@@ -382,6 +407,43 @@ export default function Home() {
         ? { background: "radial-gradient(ellipse at 30% 50%, #0e0a1a 0%, #080808 60%, #000 100%)" }
         : { background: "#080808" }}>
 
+      {/* ── TASKS POPUP ── */}
+      {showTasksPopup && (
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4" onClick={() => setShowTasksPopup(false)}>
+          <div className="w-full max-w-xs rounded-3xl border bg-[#111113] p-5 flex flex-col gap-3 max-h-[65vh]"
+            style={{ borderColor: "rgba(255,255,255,0.08)", boxShadow: "0 20px 60px rgba(0,0,0,0.7)" }}
+            onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black uppercase tracking-widest text-gray-500">Tareas pendientes</span>
+              <button onClick={() => setShowTasksPopup(false)} className="text-gray-600 hover:text-white transition-colors">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div className="overflow-y-auto flex flex-col gap-1.5 [scrollbar-width:none]">
+              {popupTasks.length === 0 && (
+                <p className="text-center py-6 text-xs text-gray-700">Sin tareas guardadas.</p>
+              )}
+              {popupTasks.map((t) => {
+                const colors: Record<string,string> = { high:"#f87171", medium:"#fbbf24", low:"#6b7280" };
+                const labels: Record<string,string> = { high:"Alta", medium:"Media", low:"Baja" };
+                return (
+                  <div key={t.id} className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors"
+                    style={{ background: t.done ? "transparent" : "rgba(255,255,255,0.03)", opacity: t.done ? 0.45 : 1 }}>
+                    <button onClick={() => togglePopupTask(t.id)}
+                      className="w-4 h-4 rounded shrink-0 flex items-center justify-center border-2 transition-all"
+                      style={t.done ? { background:"#10b981", borderColor:"#10b981" } : { background:"transparent", borderColor: colors[t.priority] }}>
+                      {t.done && <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5"><path d="M20 6L9 17l-5-5"/></svg>}
+                    </button>
+                    <span className="flex-1 text-sm truncate" style={{ color: t.done ? "#3f3f46" : "#d4d4d8", textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+                    {!t.done && <span className="text-[9px] font-black uppercase shrink-0" style={{ color: colors[t.priority] }}>{labels[t.priority]}</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── PRO AMBIENT ORBS ── */}
       {isPro && (
         <>
@@ -688,6 +750,22 @@ export default function Home() {
               </svg>
               League
             </button>
+            <button
+              onClick={openTasksPopup}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-gray-400 hover:text-violet-400 hover:bg-violet-400/5 border border-white/[0.07] hover:border-violet-400/20 transition-all"
+              title="Ver tareas">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Tareas
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="hidden sm:flex items-center justify-center w-8 h-8 rounded-xl text-gray-500 hover:text-white hover:bg-white/[0.05] border border-white/[0.07] transition-all"
+              title={theme === "dark" ? "Modo claro" : "Modo oscuro"}>
+              {theme === "dark"
+                ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              }
+            </button>
             <Link href="/tasks"
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-gray-400 hover:text-violet-400 hover:bg-violet-400/5 border border-white/[0.07] hover:border-violet-400/20 transition-all">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
@@ -805,7 +883,8 @@ export default function Home() {
               {/* Controls */}
               <div className="flex gap-2.5 w-full">
                 <button onClick={() => changeMode(mode)}
-                  className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.07] transition-colors text-gray-500 hover:text-white">
+                  className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.07] transition-colors text-gray-500 hover:text-white"
+                  title="Reiniciar">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M1 4v6h6M23 20v-6h-6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
                   </svg>
@@ -815,7 +894,21 @@ export default function Home() {
                   style={isActive
                     ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }
                     : { background: accent, color: "white" }}>
-                  {isActive ? "Pause" : "Start"}
+                  {isActive ? "Pausa" : "Iniciar"}
+                </button>
+                {/* Mute button */}
+                <button
+                  onClick={toggleMuted}
+                  title={muted ? "Activar sonido" : "Silenciar"}
+                  className="p-3.5 rounded-2xl border transition-all"
+                  style={muted
+                    ? { background: "rgba(248,113,113,0.12)", borderColor: "rgba(248,113,113,0.3)", color: "#f87171" }
+                    : { background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.07)", color: "#6b7280" }}
+                >
+                  {muted
+                    ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                    : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg>
+                  }
                 </button>
               </div>
             </div>

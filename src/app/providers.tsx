@@ -3,6 +3,23 @@ import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useSubscription } from "@/hooks/useSubscription";
 
+// ── Theme ─────────────────────────────────────────────────────────────────────
+interface ThemeContextValue { theme: "dark" | "light"; toggleTheme: () => void; }
+const ThemeContext = createContext<ThemeContextValue>({ theme: "dark", toggleTheme: () => {} });
+export function useTheme() { return useContext(ThemeContext); }
+
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<"dark" | "light">(() =>
+    typeof window !== "undefined" ? ((localStorage.getItem("studdia_theme") as "dark" | "light") ?? "dark") : "dark"
+  );
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("studdia_theme", theme);
+  }, [theme]);
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+}
+
 export const TIMER_MODES = {
   FOCUS: { label: "Focus", minutes: 25, color: "#8b5cf6" },
   SHORT: { label: "Break", minutes: 5,  color: "#10b981" },
@@ -18,10 +35,12 @@ interface TimerContextValue {
   sessions: number;
   customFocusMin: number;
   effectiveFocusMin: number;
+  muted: boolean;
   changeMode: (m: TimerMode) => void;
   setIsActive: (v: boolean) => void;
   adjustFocus: (delta: number) => void;
   formatTime: (s: number) => string;
+  toggleMuted: () => void;
 }
 
 const TimerContext = createContext<TimerContextValue | null>(null);
@@ -45,6 +64,14 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return 25;
     const saved = localStorage.getItem("studdia_focus_min");
     return saved ? Math.max(5, Math.min(120, Number(saved))) : 25;
+  });
+  const [muted, setMuted] = useState<boolean>(() =>
+    typeof window !== "undefined" ? localStorage.getItem("studdia_muted") === "1" : false
+  );
+  const toggleMuted = () => setMuted((m) => {
+    const next = !m;
+    localStorage.setItem("studdia_muted", next ? "1" : "0");
+    return next;
   });
 
   const effectiveFocusMin = isPro ? customFocusMin : 25;
@@ -81,8 +108,9 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
         }
       }
       document.title = "Studdia";
-      try {
-        const audioCtx = new AudioContext();
+      if (!muted) {
+        try {
+          const audioCtx = new AudioContext();
         const play = (freq: number, start: number, dur: number) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -99,9 +127,10 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
         play(880, 0, 0.6);
         play(660, 0.35, 0.8);
       } catch (_) {}
+      }
     }
     return () => clearInterval(interval);
-  }, [isActive, seconds, mode]);
+  }, [isActive, seconds, mode, muted]);
 
   const formatTime = (s: number) =>
     `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
@@ -109,7 +138,7 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
   return (
     <TimerContext.Provider value={{
       mode, seconds, isActive, sessions, customFocusMin, effectiveFocusMin,
-      changeMode, setIsActive, adjustFocus, formatTime,
+      muted, changeMode, setIsActive, adjustFocus, formatTime, toggleMuted,
     }}>
       {children}
     </TimerContext.Provider>
@@ -119,7 +148,9 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <TimerProviderInner>{children}</TimerProviderInner>
+      <ThemeProvider>
+        <TimerProviderInner>{children}</TimerProviderInner>
+      </ThemeProvider>
     </SessionProvider>
   );
 }

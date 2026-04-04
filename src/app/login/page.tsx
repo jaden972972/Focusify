@@ -2,11 +2,18 @@
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useTheme } from "@/app/providers";
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const errorMsg = searchParams.get("error");
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
+  const bg = isDark ? "#060608" : "#f5f4f0";
+  const textPrimary = isDark ? "#ffffff" : "#0f0f0f";
+  const textMuted = isDark ? "#6b7280" : "#6b7280";
+  const cardBorder = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
 
   async function handleGoogleLogin() {
     try {
@@ -18,12 +25,26 @@ function LoginContent() {
   }
 
   return (
-    <main className="h-screen w-screen bg-[#060608] text-white flex items-center justify-center font-sans">
+    <main className="h-screen w-screen flex items-center justify-center font-sans transition-colors duration-300"
+      style={{ background: bg, color: textPrimary }}>
       {/* Glow blob */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
         style={{ background: "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)" }}
       />
+
+      {/* Theme toggle */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-5 right-5 p-2 rounded-xl border transition-all"
+        style={{ background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)", borderColor: cardBorder, color: textMuted }}
+        title={isDark ? "Modo claro" : "Modo oscuro"}
+      >
+        {isDark
+          ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        }
+      </button>
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-sm w-full">
         {/* Logo */}
@@ -37,7 +58,7 @@ function LoginContent() {
         </div>
 
         <h1 className="text-3xl font-black tracking-tight mb-1">Studdia</h1>
-        <p className="text-gray-500 text-sm mb-8">Sign in to save your playlists across devices.</p>
+        <p className="text-sm mb-8" style={{ color: textMuted }}>Inicia sesión para guardar tus playlists en todos tus dispositivos.</p>
 
         {errorMsg && (
           <div className="w-full mb-4 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[11px] text-left break-all">
@@ -58,22 +79,23 @@ function LoginContent() {
             <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
             <path fill="none" d="M0 0h48v48H0z"/>
           </svg>
-          Continue with Google
+          Continuar con Google
         </button>
 
-        <p className="mt-6 text-[11px] text-gray-700">
-          No account needed — Google sign-in creates one automatically.
+        <p className="mt-6 text-[11px]" style={{ color: isDark ? "#4b5563" : "#9ca3af" }}>
+          No necesitas cuenta — Google Sign-In la crea automáticamente.
         </p>
 
         {/* Back link */}
         <button
           onClick={() => router.push("/")}
-          className="mt-8 text-[11px] text-gray-600 hover:text-gray-300 transition-colors flex items-center gap-1.5"
+          className="mt-8 text-[11px] hover:opacity-80 transition-opacity flex items-center gap-1.5"
+          style={{ color: textMuted }}
         >
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 5l-7 7 7 7" />
           </svg>
-          Back to home
+          Volver al inicio
         </button>
       </div>
     </main>
