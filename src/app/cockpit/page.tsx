@@ -391,11 +391,12 @@ export default function Home() {
       )}
 
       {/* ── SIDEBAR ── */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-[22rem] flex flex-col border-r border-white/[0.06] bg-[#0c0c0e] p-6 gap-5
-        transition-[transform,opacity] duration-500 ease-in-out
+      <aside className={`fixed inset-y-0 left-0 z-50 w-[22rem] flex flex-col border-r bg-[#0c0c0e] p-6 gap-5
+        transition-[transform,opacity,border-color] duration-500 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         md:relative md:translate-x-0 md:flex shrink-0
-        ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}`}>
+        ${isActive ? "opacity-20 hover:opacity-100" : "opacity-100"}`}
+        style={{ borderColor: isPro ? "rgba(245,158,11,0.25)" : "rgba(255,255,255,0.06)" }}>
 
         {/* Brand */}
         <div className="flex items-center justify-between">
@@ -407,7 +408,15 @@ export default function Home() {
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="font-black text-sm tracking-tight leading-none">Studdia</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-sm tracking-tight leading-none">Studdia</span>
+                {isPro && (
+                  <span className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md leading-none"
+                    style={{ background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>
+                    PRO
+                  </span>
+                )}
+              </div>
               <span className="text-[9px] text-gray-500 tracking-wide leading-none mt-0.5">No ads &nbsp;·&nbsp; Study In Peace.</span>
             </div>
           </div>
@@ -552,7 +561,18 @@ export default function Home() {
           {session?.user && (
             <div className="flex items-center gap-2 mb-1">
               {session.user.image && (
-                <img src={session.user.image} alt="" className="w-6 h-6 rounded-full shrink-0" />
+                <div className="relative shrink-0">
+                  <img src={session.user.image} alt="" className="w-6 h-6 rounded-full"
+                    style={isPro ? { border: "1.5px solid #f59e0b", boxShadow: "0 0 8px rgba(245,158,11,0.5)" } : {}} />
+                  {isPro && (
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full flex items-center justify-center"
+                      style={{ background: "linear-gradient(135deg,#f59e0b,#d97706)" }}>
+                      <svg width="6" height="6" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
               )}
               <span className="text-[10px] text-gray-500 truncate flex-1">{session.user.name}</span>
               <button
@@ -598,7 +618,8 @@ export default function Home() {
       <div className="flex-1 overflow-y-auto flex flex-col min-w-0">
 
         {/* ── TOPBAR ── */}
-        <header className="shrink-0 flex items-center justify-between px-6 md:px-10 py-4 border-b border-white/[0.05]">
+        <header className="shrink-0 flex items-center justify-between px-6 md:px-10 py-4 border-b transition-colors duration-500"
+          style={{ borderColor: isPro ? "rgba(245,158,11,0.2)" : "rgba(255,255,255,0.05)" }}>
           {/* Mobile hamburger */}
           <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.08] transition-colors md:hidden">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
