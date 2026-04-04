@@ -788,7 +788,10 @@ export default function Home() {
                       <span className="text-[10px] text-gray-500 ml-1">min enfoque</span>
                     </div>
                     {effectiveFocusMin < 25 && (
-                      <p className="text-[9px] mt-0.5 font-semibold" style={{ color: "#f59e0b" }}>no contará en la liga</p>
+                      <p className="text-[8px] mt-0.5 font-semibold text-center tracking-wide"
+                        style={{ color: "rgba(253,224,71,0.65)" }}>
+                        ⚠ no contará en la liga
+                      </p>
                     )}
                   </div>
                   <button onClick={() => adjustFocus(+5)} disabled={isActive || customFocusMin >= 120}
