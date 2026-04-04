@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useTimer } from "@/app/providers";
 import { addTask as addTaskAction } from "@/app/actions/tasks";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PLAN_LIMITS } from "@/lib/subscription";
@@ -44,6 +45,7 @@ function saveTasks(tasks: Task[]) {
 
 export default function TasksPage() {
   const { data: session } = useSession();
+  const { isActive, seconds, formatTime } = useTimer();
   const { isPro, limits, loading: subLoading } = useSubscription();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState("");
@@ -439,6 +441,18 @@ export default function TasksPage() {
           )}
         </div>
       </div>
+
+      {/* ── FLOATING TIMER PILL ── */}
+      {isActive && (
+        <Link
+          href="/cockpit"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-5 py-2.5 rounded-full font-black text-sm text-white"
+          style={{ background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", boxShadow: "0 0 30px rgba(139,92,246,0.5)" }}
+        >
+          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          {formatTime(seconds)} · Volver al cockpit
+        </Link>
+      )}
     </main>
   );
 }

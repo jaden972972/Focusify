@@ -5,14 +5,8 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useSubscription } from "@/hooks/useSubscription";
 import ProModal from "@/app/components/ProModal";
+import { useTimer, TIMER_MODES, type TimerMode } from "@/app/providers";
 
-const MODES = {
-  FOCUS: { label: "Focus", minutes: 25, color: "#8b5cf6" },
-  SHORT: { label: "Break", minutes: 5, color: "#10b981" },
-  LONG:  { label: "Long Break", minutes: 15, color: "#3b82f6" },
-} as const;
-
-type Mode = keyof typeof MODES;
 type Track = { id: string; title: string };
 type Playlist = { id: string; name: string; tracks: Track[] };
 type LeagueEntry = { display_name: string; sessions_week: number; sessions_total: number; isMe: boolean };
@@ -109,30 +103,17 @@ export default function Home() {
   useEffect(() => { activeTracksRef.current = activeTracks; }, [activeTracks]);
   useEffect(() => { trackIdxRef.current = currentTrackIdx; }, [currentTrackIdx]);
 
-  const [mode, setMode] = useState<Mode>("FOCUS");
-  const [isActive, setIsActive] = useState(false);
-  const [sessions, setSessions] = useState(0);
-  const [customFocusMin, setCustomFocusMin] = useState<number>(() => {
-    if (typeof window === "undefined") return 25;
-    const saved = localStorage.getItem("studdia_focus_min");
-    return saved ? Math.max(5, Math.min(120, Number(saved))) : 25;
-  });
+  const { mode, seconds, isActive, sessions, customFocusMin, effectiveFocusMin, changeMode, setIsActive, adjustFocus, formatTime } = useTimer();
   const [showLeague, setShowLeague] = useState(false);
   const [leagueData, setLeagueData] = useState<LeagueEntry[]>([]);
   const [leaguePeriod, setLeaguePeriod] = useState<"week" | "total">("week");
   const [leagueLoading, setLeagueLoading] = useState(false);
 
-  const effectiveFocusMin = isPro ? customFocusMin : 25;
-  const effectiveFocusMinRef = useRef(effectiveFocusMin);
-  useEffect(() => { effectiveFocusMinRef.current = effectiveFocusMin; }, [effectiveFocusMin]);
-
-  const [seconds, setSeconds] = useState(MODES.FOCUS.minutes * 60);
-
-  const totalSeconds = mode === "FOCUS" ? effectiveFocusMin * 60 : MODES[mode].minutes * 60;
+  const totalSeconds = mode === "FOCUS" ? effectiveFocusMin * 60 : TIMER_MODES[mode].minutes * 60;
   const progress = 1 - seconds / totalSeconds;
   const radius = 80;
   const circumference = 2 * Math.PI * radius;
-  const accent = MODES[mode].color;
+  const accent = TIMER_MODES[mode].color;
 
   // ── Video position persistence ──
   const POSITION_KEY = "studdia_video_pos";
@@ -194,6 +175,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (status !== "authenticated") return;
     if ((window as any).YT?.Player) {
       initPlayer();
     } else {
@@ -210,7 +192,7 @@ export default function Home() {
       playerRef.current?.destroy?.();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [status]);
 
   // Load new video in existing player instead of remounting iframe
   useEffect(() => {
@@ -279,20 +261,6 @@ export default function Home() {
     setSidebarOpen(false);
   };
 
-  const changeMode = (newMode: Mode) => {
-    setMode(newMode);
-    setSeconds(newMode === "FOCUS" ? effectiveFocusMinRef.current * 60 : MODES[newMode].minutes * 60);
-    setIsActive(false);
-  };
-
-  const adjustFocus = (delta: number) => {
-    if (isActive) return;
-    const next = Math.min(120, Math.max(5, customFocusMin + delta));
-    setCustomFocusMin(next);
-    if (mode === "FOCUS") setSeconds(next * 60);
-    localStorage.setItem("studdia_focus_min", String(next));
-  };
-
   const fetchLeague = async (period: "week" | "total" = "week") => {
     setLeagueLoading(true);
     try {
@@ -302,46 +270,6 @@ export default function Home() {
     } catch {}
     setLeagueLoading(false);
   };
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (isActive && seconds > 0) {
-      interval = setInterval(() => setSeconds((s) => s - 1), 1000);
-      document.title = `(${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, "0")}) Studdia`;
-    } else if (seconds === 0) {
-      setIsActive(false);
-      if (mode === "FOCUS") {
-        setSessions((s) => s + 1);
-        if (effectiveFocusMinRef.current >= 25 && sessionRef.current?.user?.email) {
-          fetch("/api/sessions", { method: "POST" }).catch(() => {});
-        }
-      }
-      document.title = "Studdia";
-      // Play a soft two-tone chime via Web Audio API
-      try {
-        const ctx = new AudioContext();
-        const play = (freq: number, start: number, dur: number) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
-          gain.gain.setValueAtTime(0, ctx.currentTime + start);
-          gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + start + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
-          osc.start(ctx.currentTime + start);
-          osc.stop(ctx.currentTime + start + dur);
-        };
-        play(880, 0, 0.6);
-        play(660, 0.35, 0.8);
-      } catch (_) {}
-    }
-    return () => clearInterval(interval);
-  }, [isActive, seconds, mode]);
-
-  const formatTime = (s: number) =>
-    `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
   // Load playlists: Supabase if logged in, localStorage otherwise
   useEffect(() => {
@@ -737,7 +665,7 @@ export default function Home() {
                 <span className="text-lg font-black tracking-tight leading-none">Studdia</span>
                 <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-md transition-colors duration-500 hidden sm:inline leading-none"
                   style={{ background: `${accent}22`, color: accent }}>
-                  {MODES[mode].label}
+                  {TIMER_MODES[mode].label}
                 </span>
               </div>
               <span className="text-[9px] text-gray-600 tracking-wide leading-none mt-0.5 hidden sm:block">No ads &nbsp;·&nbsp; Study In Peace.</span>
@@ -802,7 +730,7 @@ export default function Home() {
             {isPro && (
               <span
                 className="hidden sm:inline text-[9px] font-black uppercase tracking-[0.18em] px-2 py-0.5 rounded-md pro-badge-anim"
-                style={{ background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.4)" }}>
+                style={{ background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.4)", color: "#a78bfa" }}>
                 Pro
               </span>
             )}
@@ -823,11 +751,11 @@ export default function Home() {
 
               {/* Mode tabs */}
               <div className="flex gap-1 p-1 bg-black/40 rounded-full border border-white/[0.06] mb-7 w-full">
-                {(Object.keys(MODES) as Mode[]).map((m) => (
+                {(Object.keys(TIMER_MODES) as TimerMode[]).map((m) => (
                   <button key={m} onClick={() => changeMode(m)}
                     className="flex-1 text-[9px] font-black uppercase tracking-widest px-3 py-2 rounded-full transition-all duration-200"
-                    style={mode === m ? { background: MODES[m].color, color: "white" } : { color: "#555" }}>
-                    {MODES[m].label}
+                    style={mode === m ? { background: TIMER_MODES[m].color, color: "white" } : { color: "#555" }}>
+                    {TIMER_MODES[m].label}
                   </button>
                 ))}
               </div>

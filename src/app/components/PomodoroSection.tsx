@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 const CYCLE = [
   {
-    label: "Deep Focus",
+    label: "Foco Profundo",
     duration: "25 min",
     color: "#8b5cf6",
     glow: "rgba(139,92,246,0.25)",
@@ -13,10 +13,10 @@ const CYCLE = [
         <polyline points="12 6 12 12 16 14" />
       </svg>
     ),
-    desc: "Lock in. No distractions.",
+    desc: "Bloquéate. Sin distracciones.",
   },
   {
-    label: "Short Break",
+    label: "Descanso corto",
     duration: "5 min",
     color: "#06b6d4",
     glow: "rgba(6,182,212,0.2)",
@@ -29,10 +29,10 @@ const CYCLE = [
         <line x1="14" y1="1" x2="14" y2="4" />
       </svg>
     ),
-    desc: "Breathe. Reset.",
+    desc: "Respira. Resetea.",
   },
   {
-    label: "Deep Focus",
+    label: "Foco Profundo",
     duration: "25 min",
     color: "#8b5cf6",
     glow: "rgba(139,92,246,0.25)",
@@ -42,10 +42,10 @@ const CYCLE = [
         <polyline points="12 6 12 12 16 14" />
       </svg>
     ),
-    desc: "Go again. Deeper.",
+    desc: "Vuelve. Más profundo.",
   },
   {
-    label: "Long Break",
+    label: "Descanso largo",
     duration: "15 min",
     color: "#10b981",
     glow: "rgba(16,185,129,0.2)",
@@ -54,14 +54,14 @@ const CYCLE = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    desc: "You earned it. Recharge.",
+    desc: "Te lo mereces. Recarga.",
   },
 ];
 
 const BENEFITS = [
-  { stat: "2.5x", label: "More tasks completed", sub: "vs unstructured study" },
-  { stat: "90%", label: "Less mental fatigue", sub: "after 4 focused sessions" },
-  { stat: "25 min", label: "The sweet spot", sub: "for peak cognitive output" },
+  { stat: "2.5x", label: "Más tareas completadas", sub: "vs estudio sin estructura" },
+  { stat: "90%", label: "Menos fatiga mental", sub: "tras 4 sesiones de foco" },
+  { stat: "25 min", label: "El punto óptimo", sub: "para el máximo rendimiento cognitivo" },
 ];
 
 export default function PomodoroSection() {
@@ -77,28 +77,28 @@ export default function PomodoroSection() {
       <div className="relative z-10 flex justify-center mb-12">
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/10 text-violet-300 text-xs font-semibold tracking-widest uppercase">
           <svg width="8" height="8" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5" /></svg>
-          The Science Behind Studdia
+          La Ciencia Detrás de Studdia
         </span>
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="flex flex-col gap-6">
           <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight text-white">
-            Your brain was not built{" "}
+            Tu cerebro no fue diseñado{" "}
             <span
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: "linear-gradient(135deg, #a78bfa, #7c3aed)" }}
             >
-              to marathon.
+              para maratones.
             </span>
             <br />
-            It was built to sprint.
+            Fue diseñado para sprints.
           </h2>
 
           <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-lg">
-            The <span className="text-white font-semibold">Pomodoro Technique</span> is the most
-            battle-tested framework for deep work. Studdia wraps it in a distraction-free
-            environment with adaptive music that keeps your mind in the zone, session after session.
+            La <span className="text-white font-semibold">Técnica Pomodoro</span> es el método
+            más probado para el trabajo profundo. Studdia lo envuelve en un
+            entorno libre de distracciones con música adaptativa que mantiene tu mente en zona, sesión tras sesión.
           </p>
 
           <div className="grid grid-cols-3 gap-4 mt-2">
@@ -122,19 +122,19 @@ export default function PomodoroSection() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
             </svg>
-            Start Focus Session
+            Iniciar sesión de foco
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
             </svg>
           </button>
 
-          <p className="text-[11px] text-gray-600">Free forever - No account required - Zero ads</p>
+          <p className="text-[11px] text-gray-600">Gratis para siempre · Sin cuenta · Sin anuncios</p>
         </div>
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">One Pomodoro Cycle</span>
-            <span className="text-xs text-gray-600">~80 min total</span>
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Un ciclo Pomodoro</span>
+            <span className="text-xs text-gray-600">~80 min en total</span>
           </div>
 
           {CYCLE.map((step, i) => (
@@ -173,8 +173,8 @@ export default function PomodoroSection() {
 
           <div className="mt-4 p-4 rounded-2xl border border-white/[0.05] bg-white/[0.02]">
             <div className="flex justify-between text-[10px] text-gray-600 mb-2 font-medium">
-              <span>Session progress</span>
-              <span>80 min cycle</span>
+              <span>Progreso de sesión</span>
+              <span>Ciclo de 80 min</span>
             </div>
             <div className="w-full h-2 rounded-full bg-white/5 flex overflow-hidden gap-0.5">
               <div className="h-full rounded-full" style={{ width: "35.7%", background: "#8b5cf6" }} />
@@ -183,16 +183,16 @@ export default function PomodoroSection() {
               <div className="h-full rounded-full flex-1" style={{ background: "#10b981" }} />
             </div>
             <div className="flex justify-between text-[10px] text-gray-700 mt-1.5">
-              <span style={{ color: "#8b5cf6" }}>Focus</span>
-              <span style={{ color: "#06b6d4" }}>Rest</span>
-              <span style={{ color: "#8b5cf6" }}>Focus</span>
-              <span style={{ color: "#10b981" }}>Recharge</span>
+              <span style={{ color: "#8b5cf6" }}>Foco</span>
+              <span style={{ color: "#06b6d4" }}>Descanso</span>
+              <span style={{ color: "#8b5cf6" }}>Foco</span>
+              <span style={{ color: "#10b981" }}>Recarga</span>
             </div>
           </div>
 
           <p className="text-[11px] text-gray-600 text-center mt-1">
-            Repeat 2-4 cycles for a complete deep work session.{" "}
-            <span className="text-violet-400">Studdia tracks every one.</span>
+            Repite 2-4 ciclos para una sesión de trabajo profundo completa.{" "}
+            <span className="text-violet-400">Studdia registra cada una.</span>
           </p>
         </div>
       </div>

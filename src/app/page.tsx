@@ -60,7 +60,7 @@ const STEPS = [
   },
   {
     n: "03",
-    title: "Entra en modo Dios",
+    title: "Entra en modo supremo",
     desc: "Pulsa Start. El sidebar desaparece, el timer cuenta atrás y tu música suena. Al acabar la sesión, tu racha sube.",
     icon: "M13 2L4 14h7l-1 8 9-12h-7l1-8z",
   },
@@ -131,7 +131,6 @@ const PLANS = [
       "Playlists personalizadas ilimitadas",
       "Timer ajustable (5–120 min)",
       "Liga semanal — sube de división",
-      "Badge Pro en la app",
     ],
     missing: [],
   },
@@ -152,7 +151,7 @@ const PAINS = [
   },
   {
     emoji: "⚡",
-    pain: "Tu cerebro necesita el modo Dios",
+    pain: "Tu cerebro necesita el modo supremo",
     solution: "Interfaz Neón diseñada para eliminar la fatiga mental. Cuando el timer corre, el sidebar desaparece. Solo tú y el trabajo.",
     accent: "#8b5cf6",
   },
@@ -606,7 +605,10 @@ export default function Landing() {
               )}
               {/* Header */}
               <div className="mb-6">
-                <span className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3 block" style={{ color: plan.name === "Pro" ? "#ffffff" : plan.accent }}>{plan.name}</span>
+                <span className="text-[13px] font-black uppercase tracking-[0.18em] mb-3 block"
+                  style={plan.name === "Pro"
+                    ? { background: "linear-gradient(135deg, #a78bfa, #8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 0 8px rgba(139,92,246,0.6))" }
+                    : { color: plan.accent }}>{plan.name}</span>
                 <div className="flex items-end gap-1.5">
                   <span className="text-5xl font-black text-white">{plan.price}</span>
                   <span className="text-gray-500 text-sm mb-1.5">{plan.period}</span>
