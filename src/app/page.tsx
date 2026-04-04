@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PomodoroSection from "@/app/components/PomodoroSection";
 
-const WORDS = ["Focus.", "Ship.", "Win."];
+const WORDS = ["Ventaja.", "Injusta.", "Tuya."];
 
 const FEATURES = [
   {
@@ -39,10 +39,10 @@ const FEATURES = [
 ];
 
 const STATS = [
-  { value: "25 min", label: "Focus blocks" },
-  { value: "0", label: "Ads served" },
-  { value: "∞", label: "Free tracks" },
-  { value: "100%", label: "Distraction-free" },
+  { value: "0",    label: "Anuncios" },
+  { value: "10h",  label: "Ahorradas/semana" },
+  { value: "25min",label: "Sesiones deep work" },
+  { value: "€2.50",label: "Precio Pro/mes" },
 ];
 
 const STEPS = [
@@ -116,22 +116,49 @@ const PLANS = [
   {
     name: "Pro",
     price: "€2.50",
-    period: "/ month",
+    period: "/ mes",
     accent: "#8b5cf6",
     accentBg: "rgba(139,92,246,0.12)",
     accentBorder: "rgba(139,92,246,0.35)",
-    cta: "Upgrade to Pro",
+    cta: "Obtener mi Ventaja Injusta",
     ctaRoute: "/login",
-    badge: "Best value",
+    badge: "Solo primeros 100 usuarios",
     features: [
-      "Everything in Free",
-      "Unlimited tasks",
-      "Unlimited custom playlists",
-      "Priority support",
-      "New features first",
-      "Pro badge in app",
+      "Todo lo del plan gratuito",
+      "Tareas ilimitadas",
+      "Playlists personalizadas ilimitadas",
+      "Timer ajustable (5–120 min)",
+      "Liga semanal — sube de posición",
+      "Badge Pro en la app",
     ],
     missing: [],
+  },
+];
+
+const PAINS = [
+  {
+    emoji: "🕳️",
+    pain: "YouTube es un agujero negro",
+    solution: "Reproductor integrado sin recomendaciones, sin Shorts, sin feeds. Solo el vídeo que tú pones.",
+    accent: "#f87171",
+  },
+  {
+    emoji: "😴",
+    pain: "Estudiar solo es aburrido",
+    solution: "Sistema de Ligas semanal: compite contra otros estudiantes, sube de posición y gana estatus real.",
+    accent: "#fbbf24",
+  },
+  {
+    emoji: "📋",
+    pain: "Las tareas se acumulan sin control",
+    solution: "Task Dashboard con prioridades y barra de progreso. Ver el avance engancha más que el scroll infinito.",
+    accent: "#8b5cf6",
+  },
+  {
+    emoji: "⏰",
+    pain: "'Solo 5 minutos más' = 2 horas perdidas",
+    solution: "Pomodoro con cuenta atrás visual y chime al terminar. Tu cerebro aprende que el tiempo es real.",
+    accent: "#10b981",
   },
 ];
 
@@ -227,6 +254,15 @@ export default function Landing() {
     <div className="relative min-h-screen bg-[#060608] text-white font-sans overflow-x-hidden">
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
 
+      {/* ── SCARCITY BANNER ── */}
+      <div className="relative z-30 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 px-4 py-2 text-[11px] font-bold text-center"
+        style={{ background: "linear-gradient(90deg,#4c1d95,#6d28d9,#4c1d95)", backgroundSize: "200% 100%", animation: "pro-badge 5s linear infinite" }}>
+        <span className="text-yellow-300">⚡ Oferta de lanzamiento:</span>
+        <span className="text-white">Studdia Pro a solo 2,50€ para los primeros 100 usuarios</span>
+        <span className="text-white/60 hidden sm:inline">— después subirá de precio.</span>
+        <a href="#pricing" className="text-yellow-300 underline hover:no-underline font-black ml-1">Ver oferta →</a>
+      </div>
+
       {/* Ambient glow */}
       <div
         className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] pointer-events-none z-0 opacity-40"
@@ -272,22 +308,23 @@ export default function Landing() {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold tracking-wide mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-          Free · No ads · Open in seconds
+          Sin anuncios · Sin distracciones · Abierto en segundos
         </div>
 
         {/* Headline */}
-        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-4">
-          Your cockpit for
-          <br />
+        <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.08] mb-6">
+          Saca las notas que esperan
+          <br className="hidden sm:block" />
+          {" "}sin sacrificar tus tardes de{" "}
           <span style={{ background: "linear-gradient(135deg, #a78bfa, #8b5cf6, #6d28d9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            deep work.
+            basket o videojuegos.
           </span>
         </h1>
 
         {/* Cycling word */}
-        <div className="h-14 flex items-center justify-center mb-4">
+        <div className="h-12 flex items-center justify-center mb-5">
           <span
-            className="text-4xl md:text-5xl font-black tracking-tight transition-all duration-300"
+            className="text-3xl md:text-4xl font-black tracking-tight transition-all duration-300"
             style={{
               color: "#8b5cf6",
               opacity: visible ? 1 : 0,
@@ -298,10 +335,12 @@ export default function Landing() {
           </span>
         </div>
 
-        <p className="text-gray-400 text-lg md:text-xl leading-relaxed mb-10 max-w-xl">
-          Pomodoro timer + YouTube music + zero ads.
-          <br />
-          Built for students who need silence that slaps.
+        <p className="text-gray-400 text-lg md:text-xl leading-relaxed mb-3 max-w-2xl">
+          Studdia Pro: el único Cockpit que elimina el 99% de las distracciones de YouTube
+          y te{" "}<strong className="text-white">obliga a ser productivo mediante competición real.</strong>
+        </p>
+        <p className="text-gray-600 text-base mb-10 max-w-xl">
+          No es una herramienta. Es tu ventaja injusta estudiando.
         </p>
 
         {/* CTAs */}
@@ -309,10 +348,14 @@ export default function Landing() {
           <button
             onClick={() => router.push("/cockpit")}
             className="px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all duration-200 active:scale-95"
-            style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 40px rgba(139,92,246,0.35)" }}
+            style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 50px rgba(139,92,246,0.45)", border: "1px solid rgba(168,85,247,0.4)" }}
           >
-            Start Focusing — free
+            Obtener mi Ventaja Injusta →
           </button>
+          <a href="#pricing"
+            className="px-6 py-4 rounded-2xl font-bold text-sm text-gray-400 hover:text-white bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.15] transition-all duration-200">
+            Ver precios
+          </a>
         </div>
 
         {/* Stats */}
@@ -416,6 +459,32 @@ export default function Landing() {
       {/* ── POMODORO SECTION ── */}
       <PomodoroSection />
 
+      {/* ── DOLORES VS SOLUCIONES ── */}
+      <section className="relative z-10 px-6 pb-24 max-w-5xl mx-auto w-full">
+        <div className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Por qué Studdia funciona</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Tu problema ya tiene solución.</h2>
+          <p className="text-gray-500 text-base max-w-lg mx-auto">Cada excusa para no estudiar tiene una respuesta concreta dentro de la app.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {PAINS.map((item) => (
+            <div key={item.pain} className="flex gap-4 p-6 rounded-2xl border border-white/[0.06] bg-white/[0.025] hover:border-violet-500/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.1)] transition-all duration-300 group">
+              <div className="text-3xl shrink-0 mt-0.5">{item.emoji}</div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: item.accent }} />
+                  <p className="text-sm font-black text-gray-300 line-through decoration-2" style={{ textDecorationColor: item.accent }}>{item.pain}</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2.5" className="shrink-0 mt-0.5"><path d="M20 6L9 17l-5-5"/></svg>
+                  <p className="text-sm text-gray-400 leading-relaxed">{item.solution}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── FEATURES GRID ── */}
       <section className="relative z-10 px-6 pb-24 max-w-5xl mx-auto w-full">
         <div className="text-center mb-14">
@@ -509,9 +578,12 @@ export default function Landing() {
       {/* ── FINAL CTA ── */}
       <section id="pricing" className="relative z-10 px-6 pb-24 max-w-4xl mx-auto w-full">
         <div className="text-center mb-14">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Pricing</p>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Simple, honest pricing.</h2>
-          <p className="text-gray-500 text-base max-w-md mx-auto">Start free. Upgrade when you need more.</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Precio sin-excusas</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
+            Por menos que un Red Bull.<br />
+            <span style={{ background: "linear-gradient(135deg,#a78bfa,#8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>10 horas de productividad a la semana.</span>
+          </h2>
+          <p className="text-gray-500 text-base max-w-lg mx-auto">2,50€/mes. Sin permanencia. Sin letra pequeña. Y si no te gusta, cancelas en un clic.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
           {PLANS.map((plan) => (
@@ -580,27 +652,30 @@ export default function Landing() {
           {/* glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] pointer-events-none"
             style={{ background: "radial-gradient(ellipse at top, rgba(139,92,246,0.18) 0%, transparent 70%)" }} />
-          <p className="relative text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-5">Ready?</p>
+          <p className="relative text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-5">¿Sigues aquí?</p>
           <h2 className="relative text-4xl md:text-5xl font-black tracking-tight mb-5 leading-tight">
-            Stop planning.<br />
+            Deja de planear estudiar.<br />
             <span style={{ background: "linear-gradient(135deg, #a78bfa, #8b5cf6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              Start locking in.
+              Empieza ahora.
             </span>
           </h2>
-          <p className="relative text-gray-400 text-base mb-10 max-w-md mx-auto leading-relaxed">
-            No sign‑up required. Open the app and start your first session in under 10 seconds.
+          <p className="relative text-gray-400 text-base mb-2 max-w-md mx-auto leading-relaxed">
+            Sin registro. Abierto en menos de 10 segundos.
+          </p>
+          <p className="relative text-gray-600 text-sm mb-10 max-w-sm mx-auto">
+            Los estudiantes que usan Studdia completan sus sesiones. Los que no, siguen mirando el móvil.
           </p>
           <div className="relative flex flex-wrap gap-3 justify-center">
             <button
               onClick={() => router.push("/cockpit")}
               className="px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.15em] transition-all duration-200 active:scale-95"
-              style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 50px rgba(139,92,246,0.4)" }}>
-              Open app — free
+              style={{ background: "linear-gradient(135deg, #8b5cf6, #6d28d9)", boxShadow: "0 0 50px rgba(139,92,246,0.45)", border: "1px solid rgba(168,85,247,0.4)" }}>
+              Obtener mi Ventaja Injusta →
             </button>
             <button
               onClick={() => router.push("/login")}
               className="px-8 py-4 rounded-2xl font-bold text-sm text-gray-400 hover:text-white bg-white/[0.04] border border-white/[0.08] hover:border-white/[0.15] transition-all duration-200">
-              Sign in with Google
+              Entrar con Google
             </button>
           </div>
         </div>
