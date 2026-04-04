@@ -107,7 +107,9 @@ export default function Home() {
   const initializedRef = useRef(false);
   const sessionRef = useRef(session);
   const positionSaveRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const videoIdRef = useRef(videoId);
   useEffect(() => { sessionRef.current = session; }, [session]);
+  useEffect(() => { videoIdRef.current = videoId; }, [videoId]);
 
   // Derive active tracks from current active playlist
   const activeTracks = playlists.find(p => p.id === activePlaylistId)?.tracks ?? [];
@@ -136,21 +138,20 @@ export default function Home() {
   const savePosition = () => {
     try {
       const time = playerRef.current?.getCurrentTime?.();
-      const id = playerRef.current?.getVideoData?.()?.video_id;
+      const id = videoIdRef.current;
       if (id && typeof time === "number" && time > 2) {
         localStorage.setItem(POSITION_KEY, JSON.stringify({ id, time }));
       }
     } catch {}
   };
-  const restorePosition = (targetId: string) => {
+  const getSavedPosition = (targetId: string): number | null => {
     try {
       const raw = localStorage.getItem(POSITION_KEY);
-      if (!raw) return;
+      if (!raw) return null;
       const { id, time } = JSON.parse(raw) as { id: string; time: number };
-      if (id === targetId && time > 2) {
-        playerRef.current?.seekTo?.(time, true);
-      }
+      if (id === targetId && time > 2) return time;
     } catch {}
+    return null;
   };
 
   // ── YT IFrame API ──
@@ -161,7 +162,10 @@ export default function Home() {
       playerVars: { autoplay: 1, modestbranding: 1, rel: 0 },
       events: {
         onReady: () => {
-          restorePosition(videoId);
+          const saved = getSavedPosition(videoId);
+          if (saved) {
+            playerRef.current.loadVideoById({ videoId, startSeconds: saved });
+          }
         },
         onStateChange: (e: any) => {
           // YT.PlayerState.PLAYING = 1
@@ -210,9 +214,12 @@ export default function Home() {
   // Load new video in existing player instead of remounting iframe
   useEffect(() => {
     if (playerRef.current?.loadVideoById) {
-      playerRef.current.loadVideoById(videoId);
-      // Small delay to let the player load before seeking
-      setTimeout(() => restorePosition(videoId), 1200);
+      const saved = getSavedPosition(videoId);
+      if (saved) {
+        playerRef.current.loadVideoById({ videoId, startSeconds: saved });
+      } else {
+        playerRef.current.loadVideoById(videoId);
+      }
     }
   }, [videoId]);
 
@@ -594,11 +601,6 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex items-center gap-2 pt-2 border-t border-white/[0.04]">
-            <Link href="/tasks"
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-bold text-gray-400 hover:text-violet-400 hover:bg-violet-400/5 border border-white/[0.07] hover:border-violet-400/20 transition-all">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-              Tasks
-            </Link>
             <button onClick={() => setShowResetPlaylists(true)}
               className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] text-gray-600 hover:text-yellow-400 hover:bg-yellow-400/5 border border-white/[0.05] hover:border-yellow-400/20 transition-all">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6M23 20v-6h-6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /></svg>
@@ -645,12 +647,28 @@ export default function Home() {
           </div>
 
           {/* Right side — session pill + user avatar */}
-          <div className="flex items-center gap-3 text-[11px] text-gray-500">
-            <div className="hidden sm:flex items-center gap-2">
+          <div className="flex items-center gap-2 text-[11px] text-gray-500">
+            <div className="hidden sm:flex items-center gap-2 mr-1">
               <div className="w-1.5 h-1.5 rounded-full transition-colors duration-300" style={{ background: isActive ? accent : "#333" }} />
               <span>{isActive ? "In session" : "Ready"}</span>
               <span className="font-bold text-white ml-1">{sessions} <span className="font-normal text-gray-600">sessions</span></span>
             </div>
+            <Link href="/tasks"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-gray-400 hover:text-violet-400 hover:bg-violet-400/5 border border-white/[0.07] hover:border-violet-400/20 transition-all">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Tasks
+            </Link>
+            {!isPro && (
+              <button
+                onClick={() => setShowProModal(true)}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all"
+                style={{ background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.3)", color: "#a78bfa" }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Pro · €2.50
+              </button>
+            )}
             {session?.user?.image && (
               <img
                 src={session.user.image}

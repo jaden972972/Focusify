@@ -90,10 +90,55 @@ const TESTIMONIALS = [
   },
 ];
 
+const PLANS = [
+  {
+    name: "Free",
+    price: "€0",
+    period: "forever",
+    accent: "#6b7280",
+    accentBg: "rgba(107,114,128,0.1)",
+    accentBorder: "rgba(107,114,128,0.2)",
+    cta: "Start for free",
+    ctaRoute: "/cockpit",
+    features: [
+      "Pomodoro timer (Focus / Break / Long Break)",
+      "9 curated subject playlists",
+      "YouTube music search",
+      "Up to 5 tasks",
+      "1 custom playlist",
+      "Sync across devices (Google Sign In)",
+    ],
+    missing: [
+      "Unlimited tasks",
+      "Unlimited custom playlists",
+    ],
+  },
+  {
+    name: "Pro",
+    price: "€2.50",
+    period: "/ month",
+    accent: "#8b5cf6",
+    accentBg: "rgba(139,92,246,0.12)",
+    accentBorder: "rgba(139,92,246,0.35)",
+    cta: "Upgrade to Pro",
+    ctaRoute: "/login",
+    badge: "Best value",
+    features: [
+      "Everything in Free",
+      "Unlimited tasks",
+      "Unlimited custom playlists",
+      "Priority support",
+      "New features first",
+      "Pro badge in app",
+    ],
+    missing: [],
+  },
+];
+
 const FAQS = [
   {
     q: "Is Studdia completely free?",
-    a: "Yes. Studdia is free to use with no ads, no paywalls and no premium tier. There's no catch.",
+    a: "Studdia has a free plan with no ads. A Pro plan at €2.50/month unlocks unlimited tasks, unlimited custom playlists, and future Pro features.",
   },
   {
     q: "Do I need to create an account?",
@@ -211,6 +256,7 @@ export default function Landing() {
           >
             Sign in
           </button>
+          <a href="#pricing" className="text-sm text-gray-400 hover:text-white transition-colors px-2 py-2 hidden sm:block">Pricing</a>
           <button
             onClick={() => router.push("/cockpit")}
             className="text-sm font-bold px-5 py-2.5 rounded-xl transition-all duration-200 active:scale-95"
@@ -455,6 +501,72 @@ export default function Landing() {
                   <p className="text-gray-400 text-sm leading-relaxed">{f.a}</p>
                 </div>
               )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section id="pricing" className="relative z-10 px-6 pb-24 max-w-4xl mx-auto w-full">
+        <div className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-400 mb-3">Pricing</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">Simple, honest pricing.</h2>
+          <p className="text-gray-500 text-base max-w-md mx-auto">Start free. Upgrade when you need more.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
+          {PLANS.map((plan) => (
+            <div
+              key={plan.name}
+              className="relative flex flex-col p-8 rounded-3xl border transition-all duration-300"
+              style={{
+                background: plan.name === "Pro" ? "radial-gradient(ellipse at top, rgba(139,92,246,0.1) 0%, rgba(10,10,13,0.9) 70%)" : "rgba(255,255,255,0.025)",
+                borderColor: plan.accentBorder,
+                boxShadow: plan.name === "Pro" ? "0 0 40px rgba(139,92,246,0.12)" : "none",
+              }}
+            >
+              {plan.badge && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
+                  style={{ background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", color: "white" }}>
+                  {plan.badge}
+                </div>
+              )}
+              {/* Header */}
+              <div className="mb-6">
+                <span className="text-[11px] font-bold uppercase tracking-[0.18em] mb-3 block" style={{ color: plan.accent }}>{plan.name}</span>
+                <div className="flex items-end gap-1.5">
+                  <span className="text-5xl font-black text-white">{plan.price}</span>
+                  <span className="text-gray-500 text-sm mb-1.5">{plan.period}</span>
+                </div>
+              </div>
+              {/* Features */}
+              <ul className="flex flex-col gap-3 mb-8 flex-1">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-gray-300">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={plan.accent} strokeWidth="2.5" className="shrink-0 mt-0.5">
+                      <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                    {f}
+                  </li>
+                ))}
+                {plan.missing.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-gray-600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" className="shrink-0 mt-0.5">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              {/* CTA */}
+              <button
+                onClick={() => router.push(plan.ctaRoute)}
+                className="w-full py-3.5 rounded-2xl font-black text-sm uppercase tracking-[0.12em] transition-all duration-200 active:scale-95"
+                style={plan.name === "Pro"
+                  ? { background: "linear-gradient(135deg,#8b5cf6,#6d28d9)", boxShadow: "0 0 24px rgba(139,92,246,0.35)", color: "white" }
+                  : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#d1d5db" }}
+              >
+                {plan.cta}
+              </button>
             </div>
           ))}
         </div>
