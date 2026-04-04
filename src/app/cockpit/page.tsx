@@ -47,6 +47,7 @@ export default function Home() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProModal, setShowProModal] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
   const [videoId, setVideoId] = useState(() => {
     if (typeof window === "undefined") return "ZbQh1ZPG5pc";
@@ -620,6 +621,18 @@ export default function Home() {
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
               Inicio
             </Link>
+            {session?.user && (
+              <button onClick={() => setShowDeleteAccount(true)}
+                className="flex items-center gap-1.5 py-1.5 text-[11px] text-gray-700 hover:text-red-400 transition-colors mt-1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                  <path d="M10 11v6M14 11v6" />
+                  <path d="M9 6V4h6v2" />
+                </svg>
+                Eliminar cuenta
+              </button>
+            )}
             {/* Liga mobile button */}
             <button onClick={() => { setSidebarOpen(false); setTimeout(() => { setShowLeague(true); fetchLeague(leaguePeriod); }, 10); }}
               className="flex items-center gap-1.5 py-2 px-3 rounded-xl text-[11px] text-gray-400 hover:text-amber-400 hover:bg-amber-400/5 border border-white/[0.05] hover:border-amber-400/20 transition-all md:hidden">
@@ -1048,6 +1061,31 @@ export default function Home() {
               ))}
             </div>
             <p className="text-center text-[10px] text-gray-600 pb-4 pt-1">Top 3 ascienden cada lunes · mín. 25 min de enfoque</p>
+          </div>
+        </div>
+      )}
+
+      {showDeleteAccount && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl">
+          <div className="bg-[#0d0d0f] border border-white/[0.08] p-7 rounded-3xl max-w-sm w-full shadow-2xl">
+            <h2 className="text-base font-black mb-2 text-red-400">¿Eliminar cuenta?</h2>
+            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+              Cerrarás sesión y se eliminarán todos tus datos locales (listas y videos). Para eliminar
+              tu cuenta de Google, visita myaccount.google.com.
+            </p>
+            <div className="flex gap-2">
+              <button onClick={() => setShowDeleteAccount(false)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.08] transition-all">
+                Cancelar
+              </button>
+              <button onClick={() => {
+                localStorage.removeItem("studdia_playlists_v1");
+                signOut({ callbackUrl: "/" });
+              }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-black bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all">
+                Eliminar y cerrar sesión
+              </button>
+            </div>
           </div>
         </div>
       )}
