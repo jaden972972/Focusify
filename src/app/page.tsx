@@ -16,13 +16,13 @@ const PAINS = [
 ];
 
 const VALUE_STACK = [
-  { item: "Timer Pomodoro profesional + alarma real",         value: "€3/mes",  note: "vs Pomofocus Pro" },
-  { item: "Filtro anti-distracciones YouTube en tiempo real", value: "€9/mes",  note: "vs Freedom App" },
-  { item: "Música sin anuncios integrada en la app",          value: "€10/mes", note: "vs Spotify Premium" },
-  { item: "Liga semanal — sala de 30 estudiantes reales",     value: "€0",      note: "exclusivo Studdia" },
-  { item: "Playlists personalizadas por materia, ilimitadas", value: "€5/mes",  note: "vs Notion" },
-  { item: "Timer ajustable 5–120 min para bloques pro",       value: "€4/mes",  note: "vs Focusmate" },
-  { item: "Sincronización entre todos tus dispositivos",      value: "€2/mes",  note: "Google OAuth" },
+  { item: "Timer Pomodoro profesional + alarma real",         value: "3€/mes",  note: "vs Pomofocus Pro" },
+  { item: "Filtro anti-distracciones YouTube en tiempo real", value: "9€/mes",  note: "vs Freedom App" },
+  { item: "Música sin anuncios integrada en la app",          value: "10€/mes", note: "vs Spotify Premium" },
+  { item: "Liga semanal — sala de 30 estudiantes reales",     value: "0€",      note: "exclusivo Studdia" },
+  { item: "Playlists personalizadas por materia, ilimitadas", value: "5€/mes",  note: "vs Notion" },
+  { item: "Timer ajustable 5–120 min para bloques pro",       value: "4€/mes",  note: "vs Focusmate" },
+  { item: "Sincronización entre todos tus dispositivos",      value: "2€/mes",  note: "Google OAuth" },
 ];
 
 const STEPS = [
@@ -101,7 +101,7 @@ const FAQS = [
 
 const PRO_FEATURES: { icon: "bolt" | "diamond" | "shield"; text: string }[] = [
   { icon: "bolt",    text: "Multiplicador XP x2 — Sube de liga el doble de rápido. Inalcanzable en la capa gratuita." },
-  { icon: "bolt",    text: "Modo Hormozi Desbloqueado — Estética negra y magenta para enfoque extremo." },
+  { icon: "bolt",    text: "Modo Oscuro Pro Desbloqueado — Estética negra y magenta para enfoque extremo." },
   { icon: "shield",  text: "Protección de Racha — 1 escudo por semana si olvidas estudiar." },
   { icon: "bolt",    text: "Timer 100% Ajustable — De 1 a 180 minutos para trabajo profundo real." },
   { icon: "diamond", text: "Estatus de Leyenda — Nombre resaltado y badge neón en todos los rankings." },
@@ -298,7 +298,7 @@ export default function Landing() {
           <strong style={{ color: t.textPrimary }}>29 estudiantes reales</strong>.
         </p>
         <p className="text-base mb-12 max-w-xl" style={{ color: t.textMuted }}>
-          Por <strong style={{ color: t.textPrimary }}>€2,50/mes</strong> — menos que un Red Bull — recuperas{" "}
+          Por <strong style={{ color: t.textPrimary }}>2,50€/mes</strong> — menos que un Red Bull — recuperas{" "}
           <strong style={{ color: t.textPrimary }}>10+ horas semanales</strong> que ahora mismo estás tirando a la basura.
         </p>
 
@@ -329,7 +329,7 @@ export default function Landing() {
           {[
             { value: "0",     label: "Anuncios en toda la app" },
             { value: "<10s",  label: "Para estar en sesión" },
-            { value: "€2,50", label: "Pro al mes" },
+            { value: "2,50€", label: "Pro al mes" },
             { value: "30",    label: "Rivales reales por sala" },
           ].map((s) => (
             <div
@@ -513,8 +513,9 @@ export default function Landing() {
         >
           <p className="text-lg md:text-xl font-bold leading-relaxed" style={{ color: t.textPrimary }}>
             La media de un estudiante pierde{" "}
-            <span style={{ color: t.accent }}>3 horas al día</span> en distracciones
-            digitales mientras &quot;estudia&quot;.
+            <span style={{ color: t.accent }}>3 horas al día</span>
+            <br />
+            en distracciones digitales mientras &quot;estudia&quot;.
           </p>
           <p className="text-base mt-3" style={{ color: t.textSecondary }}>
             Son <strong style={{ color: t.textPrimary }}>15 horas a la semana</strong> en días
@@ -638,7 +639,7 @@ export default function Landing() {
           <div className="px-6 py-7">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm" style={{ color: t.textSecondary }}>Valor total estimado:</span>
-              <span className="text-sm line-through font-black" style={{ color: t.textMuted }}>€33+/mes</span>
+              <span className="text-sm line-through font-black" style={{ color: t.textMuted }}>33+€/mes</span>
             </div>
             <div
               className="flex items-center justify-between mb-7 pb-7"
@@ -646,7 +647,7 @@ export default function Landing() {
             >
               <span className="font-black text-xl" style={{ color: t.textPrimary }}>Tu precio hoy:</span>
               <div className="flex items-end gap-1.5">
-                <span className="font-black text-5xl" style={{ color: t.accent }}>€2,50</span>
+                <span className="font-black text-5xl" style={{ color: t.accent }}>2,50€</span>
                 <span className="text-sm mb-2" style={{ color: t.textMuted }}>/mes</span>
               </div>
             </div>
@@ -655,7 +656,7 @@ export default function Landing() {
               className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-[0.12em] transition-all active:scale-[0.98] text-white"
               style={{ background: t.btnPrimary, boxShadow: t.btnShadow }}
             >
-              Asegurar mi plaza Pro — €2,50/mes →
+              Asegurar mi plaza Pro — 2,50€/mes →
             </button>
             <p className="text-center text-[11px] mt-3" style={{ color: t.textMuted }}>
               Sin permanencia · Sin tarjeta hasta que decidas · Cancela cuando quieras
@@ -752,7 +753,7 @@ export default function Landing() {
               El Desafío — Siempre gratis
             </span>
             <div className="flex items-end gap-1.5 mb-7">
-              <span className="text-6xl font-black" style={{ color: t.textPrimary }}>€0</span>
+              <span className="text-6xl font-black" style={{ color: t.textPrimary }}>0€</span>
               <span className="text-sm mb-1.5" style={{ color: t.textMuted }}>para siempre</span>
             </div>
             <ul className="flex flex-col gap-3 mb-6 flex-1">
@@ -811,7 +812,7 @@ export default function Landing() {
               Pro — Ventaja Injusta
             </span>
             <div className="flex items-end gap-1.5 mb-7">
-              <span className="text-6xl font-black" style={{ color: t.textPrimary }}>€2,50</span>
+              <span className="text-6xl font-black" style={{ color: t.textPrimary }}>2,50€</span>
               <span className="text-sm mb-1.5" style={{ color: t.textMuted }}>/ mes · sin permanencia</span>
             </div>
             <ul className="flex flex-col gap-3 mb-8 flex-1">
