@@ -105,7 +105,7 @@ const PRO_FEATURES: { icon: "bolt" | "diamond" | "shield"; text: string }[] = [
   { icon: "shield",  text: "Protección de Racha — 1 escudo por semana si olvidas estudiar." },
   { icon: "bolt",    text: "Timer 100% Ajustable — De 1 a 180 minutos para Deep Work real." },
   { icon: "diamond", text: "Estatus de Leyenda — Nombre resaltado y badge neón en todos los rankings." },
-  { icon: "bolt",    text: "IA de Enfoque — Recomendaciones personalizadas y playlists sin límite." },
+  { icon: "bolt",    text: "Algoritmo de selección de contenido: Estudiarás con los mejores vídeos, no con los que YouTube quiere que veas." },
 ];
 
 const FREE_FEATURES = [

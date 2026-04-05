@@ -45,6 +45,15 @@ export async function POST() {
   const today = todayLocal();
   const displayName = session.user.name ?? session.user.email.split("@")[0];
 
+  // Check if user has Pro plan for XP multiplier
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("plan_type")
+    .eq("user_email", session.user.email)
+    .single();
+  const isPro = profile?.plan_type === "pro";
+  const increment = isPro ? 2 : 1;
+
   const { data: existing } = await supabase
     .from("session_stats")
     .select("sessions_total, sessions_week, week_start, streak, last_session_date")
@@ -52,8 +61,8 @@ export async function POST() {
     .single();
 
   const isSameWeek = existing?.week_start === weekStart;
-  const newTotal = (existing?.sessions_total ?? 0) + 1;
-  const newWeek = isSameWeek ? (existing?.sessions_week ?? 0) + 1 : 1;
+  const newTotal = (existing?.sessions_total ?? 0) + increment;
+  const newWeek = isSameWeek ? (existing?.sessions_week ?? 0) + increment : increment;
   const newStreak = calcStreak(existing?.last_session_date, existing?.streak ?? 0);
 
   const { error } = await supabase.from("session_stats").upsert(

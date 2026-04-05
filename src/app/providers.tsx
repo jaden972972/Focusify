@@ -66,7 +66,7 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
   const [customFocusMin, setCustomFocusMin] = useState<number>(() => {
     if (typeof window === "undefined") return 25;
     const saved = localStorage.getItem("studdia_focus_min");
-    return saved ? Math.max(5, Math.min(120, Number(saved))) : 25;
+    return saved ? Math.max(5, Math.min(180, Number(saved))) : 25;
   });
   const [muted, setMuted] = useState<boolean>(() =>
     typeof window !== "undefined" ? localStorage.getItem("studdia_muted") === "1" : false
@@ -91,7 +91,7 @@ function TimerProviderInner({ children }: { children: React.ReactNode }) {
 
   const adjustFocus = (delta: number) => {
     if (isActive) return;
-    const next = Math.min(120, Math.max(5, customFocusMin + delta));
+    const next = Math.min(180, Math.max(5, customFocusMin + delta));
     setCustomFocusMin(next);
     if (mode === "FOCUS") setSeconds(next * 60);
     localStorage.setItem("studdia_focus_min", String(next));

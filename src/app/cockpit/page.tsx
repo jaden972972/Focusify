@@ -361,12 +361,10 @@ export default function Home() {
   }, [playlists]);
 
   const searchYoutube = async (query: string) => {
-    if (!query || !API_KEY) return;
+    if (!query) return;
     setLoading(true);
     try {
-      const res = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}`
-      );
+      const res = await fetch(`/api/youtube/search?q=${encodeURIComponent(query)}`);
       const data = await res.json();
       setResults(data.items || []);
     } catch (e) {
@@ -701,13 +699,20 @@ export default function Home() {
               Liga
             </button>
             <button
-              onClick={toggleTheme}
-              className="hidden sm:flex items-center justify-center w-8 h-8 rounded-xl text-gray-500 hover:text-white hover:bg-white/[0.05] border border-white/[0.07] transition-all"
-              title={theme === "dark" ? "Modo claro" : "Modo oscuro"}>
-              {theme === "dark"
-                ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-                : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              onClick={isPro ? toggleTheme : () => setShowProModal(true)}
+              className="hidden sm:flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all"
+              title={isPro ? (theme === "dark" ? "Salir del Modo Hormozi" : "Activar Modo Hormozi") : "Modo Hormozi — Pro"}
+              style={isPro && isDark
+                ? { background: "rgba(139,92,246,0.12)", borderColor: "rgba(139,92,246,0.3)", color: "#a78bfa" }
+                : isPro
+                  ? { background: "rgba(209,0,209,0.07)", borderColor: "rgba(209,0,209,0.25)", color: "#D100D1" }
+                  : { background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)", color: "#555" }}>
+              {isDark
+                ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                : <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
               }
+              Modo Hormozi
+              {!isPro && <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2.5" className="ml-0.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>}
             </button>
 
             {!isPro && (
@@ -804,7 +809,7 @@ export default function Home() {
                       </p>
                     )}
                   </div>
-                  <button onClick={() => adjustFocus(+5)} disabled={isActive || customFocusMin >= 120}
+                  <button onClick={() => adjustFocus(+5)} disabled={isActive || customFocusMin >= 180}
                     className="w-8 h-8 rounded-xl bg-white/[0.04] border border-white/[0.07] text-gray-400 hover:text-white hover:bg-white/[0.08] flex items-center justify-center text-lg font-bold transition-all disabled:opacity-30 shrink-0">+</button>
                 </div>
               )}
@@ -896,13 +901,13 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {results.map((item) => {
-                    const vid = item.id.videoId;
-                    const title = item.snippet.title;
+                    const vid = item.id;
+                    const title = item.title;
                     return (
                       <div key={vid} className="group relative">
                         <div onClick={() => { setVideoId(vid); setResults([]); }}
                           className="relative aspect-video overflow-hidden rounded-xl border border-white/[0.06] cursor-pointer group-hover:border-white/20 transition-all">
-                          <img src={item.snippet.thumbnails.medium.url} alt={title}
+                          <img src={item.thumbnail} alt={title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                             <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-200">
