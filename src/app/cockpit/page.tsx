@@ -1041,32 +1041,60 @@ export default function Home() {
                 <div className="text-center py-10 text-gray-600 text-sm">Cargando...</div>
               ) : leagueData.length === 0 ? (
                 <div className="text-center py-10 text-gray-600 text-sm">Sin datos en esta liga.<br/>¡Completa sesiones para aparecer!</div>
-              ) : leagueData.map((entry, i) => (
-                <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors"
-                  style={entry.isMe
-                    ? { background: `${LEAGUE_META[leagueTierView].color}15`, border: `1px solid ${LEAGUE_META[leagueTierView].color}30` }
-                    : { background: "rgba(255,255,255,0.02)", border: "1px solid transparent" }}>
-                  <span className="w-7 text-center text-sm font-black shrink-0"
-                    style={{ color: i === 0 ? "#f59e0b" : i === 1 ? "#9ca3af" : i === 2 ? "#cd7c2f" : "#444" }}>
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
-                  </span>
-                  <span className="flex-1 text-sm font-semibold truncate"
-                    style={{ color: entry.isMe ? LEAGUE_META[leagueTierView].color : "var(--text-primary)" }}>
-                    {entry.display_name}{entry.isMe && " (tú)"}
-                  </span>
-                  {entry.streak > 0 && (
-                    <span className="text-[11px] tabular-nums" style={{ color: "#f97316" }}>
-                      🔥{entry.streak}
+              ) : leagueData.map((entry, i) => {
+                const n = leagueData.length;
+                // Promotion zone: top 5 in Novato / Aficionado (weekly ranking only)
+                const isPromo = leaguePeriod === "week"
+                  && (leagueTierView === "novato" || leagueTierView === "aficionado")
+                  && i < 5;
+                // Relegation zone: bottom 5 in Aficionado, bottom 7 in Élite
+                const isReleg = leaguePeriod === "week" && !isPromo && (
+                  (leagueTierView === "aficionado" && i >= n - 5) ||
+                  (leagueTierView === "elite"      && i >= n - 7)
+                );
+                const zoneColor = isPromo ? "#22c55e" : isReleg ? "#ef4444" : null;
+                return (
+                  <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors"
+                    style={
+                      entry.isMe
+                        ? { background: `${LEAGUE_META[leagueTierView].color}15`, border: `1px solid ${LEAGUE_META[leagueTierView].color}30` }
+                        : isPromo
+                        ? { background: "rgba(34,197,94,0.07)",  border: "1px solid rgba(34,197,94,0.22)" }
+                        : isReleg
+                        ? { background: "rgba(239,68,68,0.07)",  border: "1px solid rgba(239,68,68,0.22)" }
+                        : { background: "rgba(255,255,255,0.02)", border: "1px solid transparent" }
+                    }>
+                    <span className="w-7 text-center text-sm font-black shrink-0"
+                      style={{ color: i === 0 ? "#f59e0b" : i === 1 ? "#9ca3af" : i === 2 ? "#cd7c2f" : "#444" }}>
+                      {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
                     </span>
-                  )}
-                  <span className="text-sm font-black tabular-nums" style={{ color: entry.isMe ? LEAGUE_META[leagueTierView].color : "var(--text-secondary)" }}>
-                    {leaguePeriod === "week" ? entry.sessions_week : entry.sessions_total}
-                  </span>
-                  <span className="text-[10px] text-gray-600 shrink-0">ses.</span>
-                </div>
-              ))}
+                    <span className="flex-1 text-sm font-semibold truncate"
+                      style={{ color: entry.isMe ? LEAGUE_META[leagueTierView].color : "var(--text-primary)" }}>
+                      {entry.display_name}{entry.isMe && " (tú)"}
+                    </span>
+                    {entry.streak > 0 && (
+                      <span className="text-[11px] tabular-nums" style={{ color: "#f97316" }}>
+                        🔥{entry.streak}
+                      </span>
+                    )}
+                    <span className="text-sm font-black tabular-nums" style={{ color: entry.isMe ? LEAGUE_META[leagueTierView].color : "var(--text-secondary)" }}>
+                      {leaguePeriod === "week" ? entry.sessions_week : entry.sessions_total}
+                    </span>
+                    <span className="text-[10px] text-gray-600 shrink-0">ses.</span>
+                    {zoneColor && (
+                      <span className="text-[10px] font-black w-5 text-center shrink-0" style={{ color: zoneColor }}>
+                        {isPromo ? "↑" : "↓"}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-            <p className="text-center text-[10px] text-gray-600 pb-4 pt-1">Top 3 ascienden cada lunes · mín. 25 min de enfoque</p>
+            <p className="text-center text-[10px] text-gray-600 pb-4 pt-1">
+              {leagueTierView === "novato"     && "↑ Top 5 → Aficionado cada lunes"}
+              {leagueTierView === "aficionado" && "↑ Top 5 → Élite · ↓ Bottom 5 → Novato cada lunes"}
+              {leagueTierView === "elite"      && "↓ Bottom 7 → Aficionado · #1 gana Pro gratis"}
+            </p>
           </div>
         </div>
       )}
