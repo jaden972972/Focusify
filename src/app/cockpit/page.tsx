@@ -849,7 +849,7 @@ export default function Home() {
                 <button onClick={() => setIsActive(!isActive)}
                   className="flex-1 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98]"
                   style={isActive
-                    ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }
+                    ? { background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.15)"}`, color: isDark ? "white" : "#1D1D1F" }
                     : { background: accent, color: "white", boxShadow: `0 0 24px rgba(${accentRgb},0.55), 0 4px 12px rgba(${accentRgb},0.35)` }}>
                   {isActive ? "Pausa" : "Iniciar"}
                 </button>
