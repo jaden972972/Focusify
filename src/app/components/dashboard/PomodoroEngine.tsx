@@ -1,5 +1,6 @@
 ﻿"use client";
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
 
 const MODES = {
   FOCUS: { label: "Enfoque",        minutes: 25, color: "#8b5cf6" },
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function PomodoroEngine({ onSessionComplete, onFocusToggle }: Props) {
+  const { data: session } = useSession();
   const [mode, setMode] = useState<Mode>("FOCUS");
   const [seconds, setSeconds] = useState(MODES.FOCUS.minutes * 60);
   const [isActive, setIsActive] = useState(false);
@@ -50,9 +52,13 @@ export default function PomodoroEngine({ onSessionComplete, onFocusToggle }: Pro
       if (mode === "FOCUS") {
         setSessions((s) => s + 1);
         onSessionComplete?.();
-        notify("Focus session complete! Time for a break.");
+        // Persist to Supabase via API (only when user is authenticated)
+        if (session?.user?.email) {
+          fetch("/api/sessions", { method: "POST" }).catch(() => {});
+        }
+        notify("Sesión completada. ¡Toma un descanso!");
       } else {
-        notify("Break over. Back to work!");
+        notify("¡Descanso terminado. A trabajar!");
       }
       try {
         const ctx = new AudioContext();
