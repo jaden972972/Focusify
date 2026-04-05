@@ -11,9 +11,9 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS = [
-  { label: "Timer",      key: "timer"  },
-  { label: "Ligas",      key: "league" },
-  { label: "Modo Video", key: "video"  },
+  { label: "Temporizador", key: "timer"  },
+  { label: "Ligas",        key: "league" },
+  { label: "Modo Vídeo",   key: "video"  },
 ] as const;
 
 export default function Navbar({ onTimer, onLeague, onVideo }: NavbarProps) {

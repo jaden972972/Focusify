@@ -258,7 +258,7 @@ export default function Landing() {
 
       {/* ── SCARCITY BANNER ─────────────────────────────────────────────────── */}
       <div
-        className="relative z-30 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 px-4 py-2.5 text-[11px] font-black text-center"
+        className="relative z-30 w-full hidden sm:flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 px-4 py-2.5 text-[11px] font-black text-center"
         style={{
           background: dark
             ? "linear-gradient(90deg,#7c2d12,#b91c1c,#7c2d12)"
@@ -297,7 +297,7 @@ export default function Landing() {
 
         {/* Headline */}
         <h1
-          className="text-5xl md:text-7xl font-black tracking-tight leading-[1.03] mb-6 max-w-4xl"
+          className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[1.06] mb-6 max-w-4xl"
           style={{ color: t.textPrimary }}
         >
           Deja de{" "}
@@ -310,7 +310,7 @@ export default function Landing() {
         </h1>
 
         {/* Sub */}
-        <p className="text-xl md:text-2xl leading-relaxed mb-4 max-w-3xl font-medium" style={{ color: t.textSecondary }}>
+        <p className="text-lg sm:text-xl md:text-2xl leading-relaxed mb-4 max-w-3xl font-medium" style={{ color: t.textSecondary }}>
           Studdia bloquea recomendaciones y anuncios de YouTube en tiempo real, pone tu música sin
           interrupciones y te mete en una liga semanal contra{" "}
           <strong style={{ color: t.textPrimary }}>29 estudiantes reales</strong>.
@@ -321,7 +321,7 @@ export default function Landing() {
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap gap-4 justify-center mb-16">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center mb-16 w-full">
           <button
             onClick={() => router.push("/cockpit")}
             className="group relative px-10 py-5 rounded-2xl font-black text-base uppercase tracking-[0.1em] transition-all duration-200 active:scale-[0.97] text-white"

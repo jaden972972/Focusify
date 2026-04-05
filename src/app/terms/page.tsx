@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms of Service | Studdia",
+  title: "Términos de Servicio | Studdia",
 };
 
 export default function TermsPage() {
@@ -12,62 +12,62 @@ export default function TermsPage() {
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 5l-7 7 7 7" />
           </svg>
-          Back to home
+          Volver al inicio
         </Link>
 
-        <h1 className="text-3xl font-black tracking-tight mb-2 mt-4">Terms of Service</h1>
-        <p className="text-gray-500 text-sm mb-10">Last updated: March 31, 2026</p>
+        <h1 className="text-3xl font-black tracking-tight mb-2 mt-4">Términos de Servicio</h1>
+        <p className="text-gray-500 text-sm mb-10">Última actualización: 31 de marzo de 2026</p>
 
         <div className="space-y-8 text-gray-300 text-sm leading-relaxed">
           <section>
-            <h2 className="text-white font-bold text-base mb-2">1. Acceptance of Terms</h2>
-            <p>By accessing or using Studdia ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
+            <h2 className="text-white font-bold text-base mb-2">1. Aceptación de los Términos</h2>
+            <p>Al acceder o usar Studdia («el Servicio»), aceptas quedar vinculado por estos Términos de Servicio. Si no estás de acuerdo, por favor no uses el Servicio.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">2. Description of Service</h2>
-            <p>Studdia is a web application that provides focus and productivity tools including Pomodoro timers, ambience sounds, task management, and curated music playlists. The Service is provided free of charge.</p>
+            <h2 className="text-white font-bold text-base mb-2">2. Descripción del Servicio</h2>
+            <p>Studdia es una aplicación web que ofrece herramientas de concentración y productividad: temporizador Pomodoro, sonidos de ambiente, gestión de tareas, listas de música y una liga semanal competitiva. La versión básica del Servicio es gratuita.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">3. User Accounts</h2>
-            <p>You may sign in to Studdia using your Google account via OAuth 2.0. By signing in, you authorize us to access basic profile information (name and email address) solely for the purpose of identifying your account and saving your preferences.</p>
+            <h2 className="text-white font-bold text-base mb-2">3. Cuentas de usuario</h2>
+            <p>Puedes iniciar sesión en Studdia mediante tu cuenta de Google vía OAuth 2.0. Al iniciar sesión, nos autorizas a acceder a información básica de tu perfil (nombre y correo electrónico) únicamente para identificar tu cuenta y guardar tus preferencias.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">4. Acceptable Use</h2>
-            <p>You agree not to misuse the Service, attempt to gain unauthorized access, disrupt or overload our infrastructure, or use the Service for any unlawful purpose.</p>
+            <h2 className="text-white font-bold text-base mb-2">4. Uso aceptable</h2>
+            <p>Aceptas no hacer un uso indebido del Servicio, no intentar obtener acceso no autorizado, no interrumpir ni sobrecargar nuestra infraestructura, y no usar el Servicio con fines ilegales.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">5. Intellectual Property</h2>
-            <p>All content and code within the Service are the property of Studdia and its developers. You may not copy, reproduce, or distribute any part of the Service without explicit permission.</p>
+            <h2 className="text-white font-bold text-base mb-2">5. Propiedad intelectual</h2>
+            <p>Todo el contenido y código del Servicio es propiedad de Studdia y sus desarrolladores. No puedes copiar, reproducir ni distribuir ninguna parte del Servicio sin permiso expreso.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">6. Disclaimer of Warranties</h2>
-            <p>The Service is provided "as is" without warranty of any kind. We do not guarantee that the Service will be uninterrupted, error-free, or free of viruses or other harmful components.</p>
+            <h2 className="text-white font-bold text-base mb-2">6. Exención de garantías</h2>
+            <p>El Servicio se proporciona «tal cual», sin garantías de ningún tipo. No garantizamos que el Servicio sea ininterrumpido, libre de errores o de componentes dañinos.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">7. Limitation of Liability</h2>
-            <p>To the fullest extent permitted by law, Studdia shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.</p>
+            <h2 className="text-white font-bold text-base mb-2">7. Limitación de responsabilidad</h2>
+            <p>En la máxima medida permitida por la ley, Studdia no será responsable de daños indirectos, incidentales, especiales o derivados del uso del Servicio.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">8. Changes to Terms</h2>
-            <p>We reserve the right to modify these terms at any time. Continued use of the Service after changes constitutes acceptance of the new terms.</p>
+            <h2 className="text-white font-bold text-base mb-2">8. Cambios en los términos</h2>
+            <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado del Servicio tras los cambios implica la aceptación de los nuevos términos.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-base mb-2">9. Contact</h2>
-            <p>If you have questions about these Terms, please contact us at <span className="text-violet-400">support@studdia.app</span>.</p>
+            <h2 className="text-white font-bold text-base mb-2">9. Contacto</h2>
+            <p>Si tienes preguntas sobre estos Términos, contáctanos en <span className="text-violet-400">support@studdia.app</span>.</p>
           </section>
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/5 flex gap-6 text-xs text-gray-600">
-          <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
-          <Link href="/" className="hover:text-gray-300 transition-colors">Home</Link>
+          <Link href="/privacy" className="hover:text-gray-300 transition-colors">Política de Privacidad</Link>
+          <Link href="/" className="hover:text-gray-300 transition-colors">Inicio</Link>
         </div>
       </div>
     </main>
