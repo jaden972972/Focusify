@@ -555,10 +555,10 @@ export default function Home() {
                           const isPlaying = isActive && i === currentTrackIdx;
                           return (
                             <div key={t.id} className="group/track flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/[0.04] transition-colors"
-                              style={isPlaying ? { background: `${accent}10` } : {}}>
+                              style={isPlaying ? { background: `${accent}15` } : {}}>
                               <button onClick={() => playFromPlaylist(pl.id, i)}
                                 className="flex-1 text-left text-[11px] truncate font-medium transition-colors"
-                                style={{ color: isPlaying ? "white" : "#777" }}>
+                                style={{ color: isPlaying ? accent : (isDark ? "#777" : "#555") }}>
                                 {isPlaying ? (
                                   <span className="inline-flex items-end gap-[2px] mr-1">
                                     {[1,2,3].map(b => (
@@ -701,7 +701,7 @@ export default function Home() {
             <button
               onClick={isPro ? toggleTheme : () => setShowProModal(true)}
               className="hidden sm:flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all"
-              title={isPro ? (theme === "dark" ? "Salir del Modo Hormozi" : "Activar Modo Hormozi") : "Modo Hormozi — Pro"}
+              title={isPro ? (theme === "dark" ? "Salir del Modo Oscuro" : "Activar Modo Oscuro") : "Modo Oscuro — Pro"}
               style={isPro && isDark
                 ? { background: "rgba(139,92,246,0.12)", borderColor: "rgba(139,92,246,0.3)", color: "#a78bfa" }
                 : isPro
@@ -711,7 +711,7 @@ export default function Home() {
                 ? <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                 : <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
               }
-              Modo Hormozi
+              Modo Oscuro
               {!isPro && <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2.5" className="ml-0.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>}
             </button>
 
