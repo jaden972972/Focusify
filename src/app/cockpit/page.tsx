@@ -119,7 +119,13 @@ export default function Home() {
   const progress = 1 - seconds / totalSeconds;
   const radius = 80;
   const circumference = 2 * Math.PI * radius;
-  const accent = TIMER_MODES[mode].color;
+  // In light mode, FOCUS accent is magenta to match landing; other modes keep their color
+  const accent = mode === "FOCUS"
+    ? (isDark ? "#8b5cf6" : "#D100D1")
+    : TIMER_MODES[mode].color;
+  const accentRgb = mode === "FOCUS"
+    ? (isDark ? "139,92,246" : "209,0,209")
+    : (mode === "SHORT" ? "16,185,129" : "59,130,246");
 
   // ── Video position persistence ──
   const POSITION_KEY = "studdia_video_pos";
@@ -374,7 +380,7 @@ export default function Home() {
     return (
       <div className="h-screen w-screen bg-[#080808] flex flex-col items-center justify-center gap-4">
         <div className="w-9 h-9 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: "#8b5cf6", borderTopColor: "transparent" }} />
+          style={{ borderColor: isDark ? "#8b5cf6" : "#D100D1", borderTopColor: "transparent" }} />
         <p className="text-gray-600 text-xs tracking-widest uppercase">
           {status === "unauthenticated" ? "Redirigiendo..." : "Cargando..."}
         </p>
@@ -708,7 +714,11 @@ export default function Home() {
               <button
                 onClick={() => setShowProModal(true)}
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all"
-                style={{ background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.3)", color: "#a78bfa" }}>
+                style={{
+                  background: isDark ? "rgba(139,92,246,0.12)" : "rgba(209,0,209,0.08)",
+                  border: isDark ? "1px solid rgba(139,92,246,0.3)" : "1px solid rgba(209,0,209,0.25)",
+                  color: isDark ? "#a78bfa" : "#D100D1",
+                }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                 </svg>
@@ -723,13 +733,13 @@ export default function Home() {
                   title={session.user.name ?? ""}
                   className="w-7 h-7 rounded-full shrink-0 transition-all"
                   style={isPro
-                    ? { border: "2px solid #8b5cf6", boxShadow: "0 0 14px rgba(139,92,246,0.7)" }
+                    ? { border: `2px solid ${isDark ? "#8b5cf6" : "#D100D1"}`, boxShadow: `0 0 14px rgba(${accentRgb},0.65)` }
                     : { border: "1px solid rgba(255,255,255,0.1)" }}
                 />
                 {isPro && (
                   <div
                     className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full flex items-center justify-center"
-                    style={{ background: "linear-gradient(135deg,#8b5cf6,#3b82f6)", boxShadow: "0 0 10px rgba(139,92,246,0.9)" }}
+                    style={{ background: `linear-gradient(135deg,${isDark ? "#8b5cf6" : "#D100D1"},${isDark ? "#3b82f6" : "#a000bb"})`, boxShadow: `0 0 10px rgba(${accentRgb},0.9)` }}
                     title="Pro member">
                     <svg width="7" height="7" viewBox="0 0 24 24" fill="white">
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -835,7 +845,7 @@ export default function Home() {
                   className="flex-1 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98]"
                   style={isActive
                     ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }
-                    : { background: accent, color: "white" }}>
+                    : { background: accent, color: "white", boxShadow: `0 0 24px rgba(${accentRgb},0.55), 0 4px 12px rgba(${accentRgb},0.35)` }}>
                   {isActive ? "Pausa" : "Iniciar"}
                 </button>
                 {/* Mute button */}
